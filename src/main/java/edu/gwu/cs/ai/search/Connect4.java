@@ -69,6 +69,7 @@ class GameMatrix implements Cloneable {
                 for (int k = 0; k < TARGET_LENGTH; k++) {
                     if (gameMatrix[i + k][j] != color) {
                         found = false;
+                        i = k;
                     }
                 }
                 if (found) {
@@ -84,6 +85,7 @@ class GameMatrix implements Cloneable {
                 for (int k = 0; k < TARGET_LENGTH; k++) {
                     if (gameMatrix[i][j + k] != color) {
                         found = false;
+                        j = k;
                     }
                 }
                 if (found) {
