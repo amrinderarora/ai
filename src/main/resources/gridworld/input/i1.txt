@@ -8,4 +8,6 @@
 0,S,0,W,0,3
 0,0,0,0,0,3
 1,-1,0,W,-1,-1
- 
+ # Every cell that has a non zero number is a terminal state
+ # W is the wall
+ # S is the start state
