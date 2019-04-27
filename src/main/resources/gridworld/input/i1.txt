@@ -1,0 +1,11 @@
+# Anything that follows # is a comment
+6,6
+# First line means  the size of the grid world is 6 x 6
+# Top left is 0,0, bottom right is 4,4
+0,-1,0,0,0,0
+0,0,0,W,-1,0
+0,0,0,W,0,3
+0,S,0,W,0,3
+0,0,0,0,0,3
+1,-1,0,W,-1,-1
+ 
