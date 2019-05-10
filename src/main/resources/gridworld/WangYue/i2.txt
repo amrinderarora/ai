@@ -1,0 +1,10 @@
+# Anything that follows # is a comment
+3,4
+# First line means  the size of the grid world is 6 x 6
+# Top left is 0,0, bottom right is 4,4
+0,0,0,1
+0,W,0,-1
+S,0,0,0
+ # Every cell that has a non zero number is a terminal state
+ # W is the wall
+ # S is the start state
