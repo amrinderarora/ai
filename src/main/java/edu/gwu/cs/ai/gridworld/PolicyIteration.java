@@ -22,7 +22,7 @@ public class PolicyIteration {
                 if (gw.gridWorld[i][j] == 'W')
                     temp = "W";
                 else if (gw.gridWorldValue[i][j] != 0)
-                    temp = Integer.toString(gw.gridWorldValue[i][j]);
+                    temp = Double.toString(gw.gridWorldValue[i][j]);
                 else {
                     temp = df.format(vVlaue[i][j]);
                 }
@@ -90,10 +90,10 @@ public class PolicyIteration {
     static Vector<Double> getQValue(double[][] current, GridWorld gw, int i, int j) {
         Vector<Double> qValue = new Vector<>();
         if (gw.gridWorldValue[i][j] != 0) {
-            qValue.add((double) gw.gridWorldValue[i][j]);
-            qValue.add((double) gw.gridWorldValue[i][j]);
-            qValue.add((double) gw.gridWorldValue[i][j]);
-            qValue.add((double) gw.gridWorldValue[i][j]);
+            qValue.add(gw.gridWorldValue[i][j]);
+            qValue.add(gw.gridWorldValue[i][j]);
+            qValue.add(gw.gridWorldValue[i][j]);
+            qValue.add(gw.gridWorldValue[i][j]);
             return qValue;
         }
         double value = 0;

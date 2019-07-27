@@ -23,7 +23,7 @@ public class ValueIteration {
                 if (gw.gridWorld[i][j] == 'W')
                     temp = "W";
                 else if (gw.gridWorldValue[i][j] != 0)
-                    temp = Integer.toString(gw.gridWorldValue[i][j]);
+                    temp = Double.toString(gw.gridWorldValue[i][j]);
                 else {
                     int n = i * gw.m + j;
                     temp = "[" + df.format(qVlaue.get(n).get(0)) + ", " + df.format(qVlaue.get(n).get(1)) + ", "
@@ -47,7 +47,7 @@ public class ValueIteration {
                 if (gw.gridWorld[i][j] == 'W')
                     temp = "W";
                 else if (gw.gridWorldValue[i][j] != 0)
-                    temp = Integer.toString(gw.gridWorldValue[i][j]);
+                    temp = Double.toString(gw.gridWorldValue[i][j]);
                 else {
                     temp = df.format(vVlaue[i][j]);
                 }
@@ -148,10 +148,10 @@ public class ValueIteration {
         Vector<Double> qValue = new Vector<>();
         // if this is a terminal state, return the terminal value
         if (gw.gridWorldValue[i][j] != 0) {
-            qValue.add((double) gw.gridWorldValue[i][j]);
-            qValue.add((double) gw.gridWorldValue[i][j]);
-            qValue.add((double) gw.gridWorldValue[i][j]);
-            qValue.add((double) gw.gridWorldValue[i][j]);
+            qValue.add(gw.gridWorldValue[i][j]);
+            qValue.add(gw.gridWorldValue[i][j]);
+            qValue.add(gw.gridWorldValue[i][j]);
+            qValue.add(gw.gridWorldValue[i][j]);
             return qValue;
         }
         // North

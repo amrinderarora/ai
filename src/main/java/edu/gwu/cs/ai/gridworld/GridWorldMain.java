@@ -17,15 +17,16 @@ public class GridWorldMain {
             filePath = "src/test/resources/gridworld/i1.txt";
         }
         GridWorld gw = readInput(filePath);
-        if (gw == null)
+        if (gw == null) {
             return;
+        }
         ValueIteration.printQStar(gw);
         ValueIteration.printVStar(gw);
         PolicyIteration.printVStar(gw);
     }
 
     // read from input file, reate GridWorld instance
-    static GridWorld readInput(String fileName) throws Exception {
+    private static GridWorld readInput(String fileName) throws Exception {
         int n, m;
         BufferedReader br = null;
         try {
@@ -41,7 +42,7 @@ public class GridWorldMain {
             m = Integer.parseInt(temp[1]);
 
             char[][] gridWorld = new char[n][m];
-            int[][] gridWorldValue = new int[n][m];
+            double[][] gridWorldValue = new double[n][m];
             st = br.readLine();
             while (st.charAt(0) == '#')
                 st = br.readLine();
