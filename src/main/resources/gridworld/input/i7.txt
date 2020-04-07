@@ -1,0 +1,25 @@
+# A vanilla large but irregular grid
+20
+0.9
+0.8, 0.1, 0.1
+
+X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,100
+X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X
+X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X
+X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X
+X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X
+X,X,X,X,X,X,X,X,X,X,X,0,X,X,X,X,X,X,X,X
+X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X
+X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X
+X,0,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X
+X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X
+X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X
+X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X
+X,X,X,X,0,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X
+X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X
+X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X
+X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X
+X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X
+X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X
+X,-100000,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X
+X,X,X,X,X,X,X,X,X,X,X,X,0,X,X,X,X,X,X,X

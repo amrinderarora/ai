@@ -1,13 +1,13 @@
 # Anything that follows # is a comment
-6,6
-# First line means  the size of the grid world is 6 x 6
-# Top left is 0,0, bottom right is 4,4
-0,-1,0,0,0,0
-0,0,0,W,-1,0
-0,0,0,W,0,3
-0,S,0,W,0,3
-0,0,0,0,0,3
-1,-1,0,W,-1,-1
- # Every cell that has a non zero number is a terminal state
- # W is the wall
- # S is the start state
+7
+# Signifies it is a 7 by 7 grid
+0.9                 # Gamma, Discount Factor
+0.8, 0.1, 0.1       # Noise – can have 3, or 4 parameters
+
+X,X,X,1,X,X,X       # X denotes: Not a terminal state.
+X,X,X,-1,X,1,X      # Anything other than X is a terminal state
+-1,X,X,-1,X,4,X     # Terminal values can be +ve, -ve or 0
+X,1,X,-1,X,1,X
+X,100,X,-100,X,3,X
+X,2,X,-1,X,3,X
+0,X,X,-1,X,1,X
