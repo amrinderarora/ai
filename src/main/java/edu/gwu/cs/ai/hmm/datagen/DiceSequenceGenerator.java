@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import edu.gwu.cs.ai.hmm.Dice;
+import edu.gwu.cs.ai.core.Dice;
 
 public class DiceSequenceGenerator {
 
@@ -96,8 +96,8 @@ public class DiceSequenceGenerator {
 
 	public static void main(String[] args) throws IOException {
 		DiceSequenceGenerator dsg = new DiceSequenceGenerator();
-		double[][] emissionProbs = { { 0.6, 0.2, 0.2 }, { 0.2, 0.6, 0.2 }, { 0.2, 0.2, 0.6 } };
-		dsg.generateOneInput(100, 0.99, emissionProbs);
+		double[][] emissionProbs = { { 1, 0, 0 }, { 0.33, 0.33, 0.34 }, { 0, 0, 1 } };
+		dsg.generateOneInput(100, 0.5, emissionProbs);
 	}
 
 	public static Object getRandom(Object o1, Object o2, Object o3) {

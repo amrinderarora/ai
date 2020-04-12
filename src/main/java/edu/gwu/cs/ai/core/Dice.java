@@ -1,9 +1,20 @@
-package edu.gwu.cs.ai.hmm;
+package edu.gwu.cs.ai.core;
 
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Models a regular dice. Dice is loaded, so the probabilities of different
+ * faces are not all the same. As many faces can be added as you like, although
+ * 6 are given as constants. You can have a dice with just 2 faces, that's OK,
+ * as long as the probabilities add up to 1.
+ * 
+ * And probabilities of less than 0 are not supported - we will add that feature
+ * after launching time travel.
+ * 
+ * @author Amrinder Arora
+ */
 public class Dice {
 
 	public static final String FACE_1 = "1";
@@ -32,6 +43,9 @@ public class Dice {
 	}
 
 	public void addFace(String face, double prob) {
+		if (prob < 0) {
+			throw new IllegalArgumentException("Negative probabilities not supported :-(");
+		}
 		faces.put(face, prob);
 	}
 
