@@ -10,22 +10,23 @@ import edu.gwu.cs.ai.core.Customer;
 
 public class CustomerSequenceGenerator {
 
-	public void generateOneInput(int timeSlots, double[][] transitionProbs, double[][] emissionProbs)
-			throws IOException {
+	public void generateOneInput(int timeSlots, double[][] transitionProbs, double[][] emissionProbs,
+			boolean printStates) throws IOException {
 		Customer customer = new Customer();
 		addTransitionProbs(customer);
 		addEmissionProbs(customer);
 
-		List<String> stateStrings = new ArrayList<>();
+		List<String> states = new ArrayList<>();
 		List<List<String>> emissions = new ArrayList<>();
 		boolean readyToStopCampaign = false;
 
-		stateStrings.add(customer.getCurrentStage());
+		states.add(customer.getCurrentStage());
 		System.out.println("Starting with " + customer.getCurrentStage());
 		for (int i = 0; i < timeSlots; i++) {
 			emissions.add(customer.generateOneMove());
-			stateStrings.add(customer.getCurrentStage());
+			states.add(customer.getCurrentStage());
 			if (customer.isSatisfiedCustomer() && readyToStopCampaign) {
+				states.remove(states.size() - 1);
 				break;
 			}
 			if (customer.isSatisfiedCustomer()) {
@@ -47,9 +48,13 @@ public class CustomerSequenceGenerator {
 			pw.println(String.join(",", emissionLine));
 		}
 
-		// States, for validation only
-		pw.println("# States, for testing/validation (Only available in some files)");
-		pw.println(String.join(",", stateStrings));
+		if (printStates) {
+			// States, for validation only
+			pw.println("# States, for testing/validation (Only available in some files)");
+			for (String state : states) {
+				pw.println(state);
+			}
+		}
 
 		// Phew, all done
 		pw.close();
@@ -124,7 +129,12 @@ public class CustomerSequenceGenerator {
 
 		for (int i = 0; i < 100; i++) {
 			System.err.println("Generating input number: " + (i + 1));
-			csg.generateOneInput(40, emissionProbs, emissionProbs);
+			csg.generateOneInput(40, emissionProbs, emissionProbs, true);
+			Thread.sleep(20);
+		}
+		for (int i = 0; i < 10; i++) {
+			System.err.println("Generating input number: " + (i + 1));
+			csg.generateOneInput(40, emissionProbs, emissionProbs, false);
 			Thread.sleep(20);
 		}
 	}
