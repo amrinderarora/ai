@@ -1,0 +1,48 @@
+# Sample input file generated automatically at Sun Apr 12 17:52:34 EDT 2020
+# All lines beginning with # are comments and can be ignored
+#
+# Emissions
+# There is one line per time slot for 40 or so timeslots (interactions)
+# In each timeslot there is a list of links that the user clicked on.  The list may be empty
+
+
+
+
+BLOG
+BLOG
+
+
+BLOG
+
+
+PRICING,BLOG
+
+
+
+BLOG
+
+BLOG
+
+
+
+
+
+PRICING
+BLOG
+BLOG
+
+
+
+
+
+
+
+PRICING
+
+
+
+PRICING
+PRICING
+BLOG
+# States, for testing/validation (Only available in some files)
+ZERO,AWARE,LOST,LOST,LOST,LOST,LOST,LOST,LOST,LOST,LOST,LOST,LOST,LOST,LOST,LOST,LOST,LOST,LOST,LOST,LOST,LOST,LOST,LOST,LOST,LOST,LOST,LOST,LOST,LOST,LOST,LOST,LOST,LOST,LOST,LOST,LOST,LOST,LOST,LOST,LOST
