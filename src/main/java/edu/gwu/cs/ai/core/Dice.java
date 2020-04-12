@@ -30,6 +30,10 @@ public class Dice {
 	public Map<String, Double> faces = new HashMap<>();
 	public boolean ready = false;
 
+	/** SecureRandom to generate random values. */
+	private SecureRandom secureRandom = new SecureRandom();
+
+	/** Constructs a dice object with the given ID. */
 	public Dice(int id) {
 		this.id = id;
 	}
@@ -64,7 +68,7 @@ public class Dice {
 		if (!ready) {
 			throw new IllegalArgumentException("Dice is not ready");
 		}
-		double randomValue = new SecureRandom().nextDouble();
+		double randomValue = secureRandom.nextDouble();
 		double cumulativeProbability = 0;
 		for (String diceFace : faces.keySet()) {
 			cumulativeProbability += faces.get(diceFace);
