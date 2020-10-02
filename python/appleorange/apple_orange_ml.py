@@ -7,13 +7,13 @@ from sklearn import metrics #Import scikit-learn metrics module for accuracy cal
 
 col_names = ['skin', 'volume', 'weight','label']
 # load data set
-fruits = pd.read_csv("apple_oranges.csv", header=None, names=col_names)
+fruits = pd.read_csv("apples_oranges.csv", header=None, names=col_names)
 
 #split data set in features and target variable
 feature_cols = ['skin', 'volume', 'weight']
 X = fruits[feature_cols] # Features
 
-print(pima.shape)
+print(fruits.shape)
 print(X.shape)
 
 
