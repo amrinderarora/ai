@@ -4,7 +4,7 @@ import math
 mu = 50
 sigma = 5
 print("mu: ", mu, ", sigma: ", sigma)
-for x in range(10,17):
+for x in range(14,17):
     ex = math.exp(x)
     sizeOfDist = math.floor(ex)
     s = np.random.normal(mu, sigma, sizeOfDist)

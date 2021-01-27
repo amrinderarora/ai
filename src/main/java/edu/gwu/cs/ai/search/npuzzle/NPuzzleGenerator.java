@@ -12,8 +12,10 @@ public class NPuzzleGenerator {
      * Because of some weird cycles, it is possible that
      * actual move solution is less than targetMoveCount, but it
      * can never be more than that.
+     * 
+     * @throws CloneNotSupportedException
      */
-    public NPuzzle generate(int targetMoveCount) {
+    public NPuzzle generate(int targetMoveCount) throws CloneNotSupportedException {
 
         int moveCount = 0;
 
@@ -28,7 +30,7 @@ public class NPuzzleGenerator {
             if (!npuzzle.movePossible(currentDirection)) {
                 continue;
             }
-            npuzzle.moveBlank(currentDirection);
+            npuzzle = npuzzle.moveBlank(currentDirection);
             moveCount++;
             previousDirection = currentDirection;
         }

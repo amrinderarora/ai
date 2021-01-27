@@ -1,3 +1,5 @@
+package edu.gwu.cs.ai.hmm;
+
 public class Viterbi {
     public static String[] solve(HMM hmm, float[] initialProb, String[] observations) {
         return null;

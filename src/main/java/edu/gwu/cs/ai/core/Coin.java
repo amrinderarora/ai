@@ -27,4 +27,8 @@ public class Coin {
     public String toString() {
         return name;
     }
+
+    public static void main(String[] args) {
+        System.out.println("Hi there");
+    }
 }

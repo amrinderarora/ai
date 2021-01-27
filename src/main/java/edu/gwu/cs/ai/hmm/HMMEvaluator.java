@@ -1,6 +1,10 @@
+package edu.gwu.cs.ai.hmm;
+
 public class HMMEvaluator {
+    private static final int NUM_EXPERIMENTS = 0;
+
     public static void main(String[] args) {
-        for (int i==0;i<NUM_EXPERIMENTS;i++) {
+        for (int i = 0; i < NUM_EXPERIMENTS; i++) {
             runOneExperiment();
             // Create an HMM object
             // HMM hmm = new HMM();  // Initialize randomly
@@ -9,5 +13,10 @@ public class HMMEvaluator {
             // String[] mleStates Viterbi.solve()
             // Compare actualStates vs. mleStates
         }        
+    }
+
+    private static void runOneExperiment() {
+        // TODO Auto-generated method stub
+
     }
 }

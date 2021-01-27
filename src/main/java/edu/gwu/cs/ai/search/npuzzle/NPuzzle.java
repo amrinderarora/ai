@@ -1,5 +1,7 @@
 package edu.gwu.cs.ai.search.npuzzle;
 
+import java.util.Arrays;
+
 /**
  * Models the state of the n-puzzle.
  * There are no algorithms or solvers here.
@@ -16,6 +18,27 @@ public class NPuzzle implements Cloneable {
 
     private int heurEvaluation;
     private Direction lastDirection;
+    private NPuzzle previous;
+
+
+    @Override
+    public int hashCode() {
+        return Arrays.deepHashCode(stateMatrix);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        NPuzzle other = (NPuzzle) obj;
+        if (!Arrays.deepEquals(stateMatrix, other.stateMatrix))
+            return false;
+        return true;
+    }
 
     /** Creates an instance of n-puzzle. By default, it is solved. */
     public NPuzzle() {
@@ -65,42 +88,48 @@ public class NPuzzle implements Cloneable {
 
     /**
      * Moves the BLANK in the specified direction.
+     * 
+     * @return
+     * 
+     * @throws CloneNotSupportedException
      */
-    public void moveBlank(Direction direction) {
+    public NPuzzle moveBlank(Direction direction) throws CloneNotSupportedException {
         if (!movePossible(direction)) {
             throw new IllegalArgumentException("Move not possible: " + direction);
         }
+        NPuzzle nPuzzleNewState = this.clone();
         if (direction == Direction.UP) {
-            stateMatrix[blankRow][blankCol] = stateMatrix[blankRow - 1][blankCol];
-            setBlank(blankRow - 1, blankCol);
+            nPuzzleNewState.stateMatrix[blankRow][blankCol] = stateMatrix[blankRow - 1][blankCol];
+            nPuzzleNewState.setBlank(blankRow - 1, blankCol);
         }
         if (direction == Direction.DOWN) {
-            stateMatrix[blankRow][blankCol] = stateMatrix[blankRow + 1][blankCol];
-            setBlank(blankRow + 1, blankCol);
+            nPuzzleNewState.stateMatrix[blankRow][blankCol] = stateMatrix[blankRow + 1][blankCol];
+            nPuzzleNewState.setBlank(blankRow + 1, blankCol);
         }
         if (direction == Direction.LEFT) {
-            stateMatrix[blankRow][blankCol] = stateMatrix[blankRow][blankCol - 1];
-            setBlank(blankRow, blankCol - 1);
+            nPuzzleNewState.stateMatrix[blankRow][blankCol] = stateMatrix[blankRow][blankCol - 1];
+            nPuzzleNewState.setBlank(blankRow, blankCol - 1);
         }
         if (direction == Direction.RIGHT) {
-            stateMatrix[blankRow][blankCol] = stateMatrix[blankRow][blankCol + 1];
-            setBlank(blankRow, blankCol + 1);
+            nPuzzleNewState.stateMatrix[blankRow][blankCol] = stateMatrix[blankRow][blankCol + 1];
+            nPuzzleNewState.setBlank(blankRow, blankCol + 1);
         }
-        this.lastDirection = direction;
+        nPuzzleNewState.lastDirection = direction;
+        nPuzzleNewState.setPrevious(this);
+        return nPuzzleNewState;
     }
-
 
     /**
      * Checks if the npuzzle is in solved state.
      * 
      * @return True if the puzzle is solved after this move.
      */
-
     public boolean isSolved() {
-        // For each value of height, Check the rows
         int counter = 1;
+        // Just traverses left to right, and then top to down and matches that to the counter
         for (int i = 0; i < SIDE; i++) {
             for (int j = 0; j < SIDE; j++) {
+                // This is for the blank
                 if (i == SIDE - 1 & j == SIDE - 1) {
                     continue;
                 }
@@ -121,7 +150,7 @@ public class NPuzzle implements Cloneable {
                 np2.stateMatrix[i][j] = this.stateMatrix[i][j];
             }
         }
-        
+
         return np2;
     }
 
@@ -149,5 +178,23 @@ public class NPuzzle implements Cloneable {
 
     public int getHeurEvaluation() {
         return heurEvaluation;
+    }
+
+    public NPuzzle getPrevious() {
+        return previous;
+    }
+
+    private void setPrevious(NPuzzle prevArg) {
+        this.previous = prevArg;
+    }
+
+    public int getDistanceToRoot() {
+        int dist = 0;
+        NPuzzle curr = this;
+        while (curr.previous != null) {
+            curr = curr.previous;
+            dist++;
+        }
+        return dist;
     }
 }
