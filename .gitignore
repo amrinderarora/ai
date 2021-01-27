@@ -3,3 +3,5 @@
 .gitignore
 .settings/
 /target/
+.settings/org.eclipse.jdt.core.prefs
+.classpath
