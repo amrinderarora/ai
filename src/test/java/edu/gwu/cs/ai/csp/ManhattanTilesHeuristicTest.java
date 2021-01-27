@@ -69,7 +69,7 @@ public class ManhattanTilesHeuristicTest {
     public void testSample1() {
         int[] stateArray = { 2, 6, 4, 3, 1, 7, 8, 5, 0 };
         NPuzzle nPuzzle = new NPuzzle(stateArray);
-        nPuzzle.recalculateHeuristic(heuristic);
-        Assert.assertEquals(nPuzzle.getHeurEvaluation(), 16);
+        int h = heuristic.evaluate(nPuzzle);
+        Assert.assertEquals(h, 16);
     }
 }

@@ -4,14 +4,17 @@ import edu.gwu.cs.ai.search.Strategy;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        int targetMoveCount = 13;
-        NPuzzle puzzle1 = new NPuzzleGenerator().generate(targetMoveCount);
-        System.out.println("targetMoveCount: " + targetMoveCount + ", puzzle:\r\n" + puzzle1.getPrintVersion());
+        int targetMoveCount = 17;
+        NPuzzle nPuzzle = new NPuzzleGenerator().generate(targetMoveCount);
+        System.out.println("targetMoveCount: " + targetMoveCount + ", puzzle:\r\n" + nPuzzle.getPrintVersion());
+
+        // We set this puzzle as the "root"
+        nPuzzle.setPrevious(null);
 
         NPuzzleSearchAlgorithm nPuzzleSearchAlgorithm = new NPuzzleSearchAlgorithm();
         NPuzzleHeuristic heuristicAlgorithm = new ZeroHeuristic();
 
-        SearchStatistics searchStats = nPuzzleSearchAlgorithm.solveGraphSearch(puzzle1, Strategy.BFS, heuristicAlgorithm);
+        SearchStatistics searchStats = nPuzzleSearchAlgorithm.solveGraphSearch(nPuzzle, Strategy.BFS, heuristicAlgorithm);
         System.out.println(searchStats);
     }
 }

@@ -16,7 +16,6 @@ public class NPuzzle implements Cloneable {
     private int blankRow;
     private int blankCol;
 
-    private int heurEvaluation;
     private Direction lastDirection;
     private NPuzzle previous;
 
@@ -168,23 +167,15 @@ public class NPuzzle implements Cloneable {
         return stateMatrix[i][j];
     }
 
-    public void recalculateHeuristic(NPuzzleHeuristic heuristicAlgorithm) {
-        this.heurEvaluation = heuristicAlgorithm.evaluate(this);
-    }
-
     public Direction getLastDirection() {
         return lastDirection;
-    }
-
-    public int getHeurEvaluation() {
-        return heurEvaluation;
     }
 
     public NPuzzle getPrevious() {
         return previous;
     }
 
-    private void setPrevious(NPuzzle prevArg) {
+    public void setPrevious(NPuzzle prevArg) {
         this.previous = prevArg;
     }
 

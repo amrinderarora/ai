@@ -10,10 +10,9 @@ import edu.gwu.cs.ai.search.Strategy;
 public class NPuzzleSearchAlgorithm {
 
     public static final String NEW_LINE = "\r\n";
-    public long globalCount = 0;
 
     /**
-     * Solves using the starting npuzzle using graph search (so, it maintains a closed list).
+     * Solves using the starting npuzzle using graph search (maintains a closed list).
      * 
      * Ignores Strategy for now, and uses BFS.
      * 
@@ -50,20 +49,11 @@ public class NPuzzleSearchAlgorithm {
                         }
                     }
                 }
-
-                // exploration of best node is finished
-                closedSet.add(bestNode);
             }
+            // exploration of best node is finished
+            searchStats.incrementClosed();
+            closedSet.add(bestNode);
         }
         return searchStats;
-    }
-
-    private void print(Direction direction, NPuzzle npuzzle, boolean terminal) {
-        System.out.println("Direction: " + direction);
-        System.out.println(npuzzle);
-        if (terminal) {
-            System.out.println("[SOLVED]");
-            System.out.println("Total Moves: " + globalCount);
-        }
     }
 }
