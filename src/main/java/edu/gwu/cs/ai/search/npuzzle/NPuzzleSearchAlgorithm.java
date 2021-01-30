@@ -14,7 +14,10 @@ public class NPuzzleSearchAlgorithm {
     /**
      * Solves using the starting npuzzle using graph search (maintains a closed list).
      * 
-     * Ignores Strategy for now, and uses BFS.
+     * Ignores Strategy, and uses BFS (Deque, FIFO).
+     * 
+     * Does not use priority queue for cost, so heuristic is for your mental satisfaction only. Please provide a good one, and please be
+     * consistent.
      * 
      * @param nPuzzle
      * @throws Exception
@@ -41,6 +44,7 @@ public class NPuzzleSearchAlgorithm {
                     if (!closedSet.contains(nextState)) {
                         openSet.addLast(nextState);
                         searchStats.incrementOpen();
+                        searchStats.setCurrentOpen(openSet.size());
                         if (nextState.isSolved()) {
                             int distanceToRoot = nextState.getDistanceToRoot();
                             searchStats.setFound(true);

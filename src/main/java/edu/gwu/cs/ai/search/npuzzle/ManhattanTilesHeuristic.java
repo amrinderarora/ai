@@ -5,9 +5,9 @@ public class ManhattanTilesHeuristic implements NPuzzleHeuristic {
     @Override
     public int evaluate(NPuzzle npuzzle) {
         int manhattanDistance = 0;
-        for (int i = 0; i < NPuzzle.SIDE; i++) {
-            for (int j = 0; j < NPuzzle.SIDE; j++) {
-                manhattanDistance += getManhattanDistance(i, j, npuzzle.getState(i, j));
+        for (int i = 0; i < npuzzle.getSize(); i++) {
+            for (int j = 0; j < npuzzle.getSize(); j++) {
+                manhattanDistance += getManhattanDistance(npuzzle.getSize(), i, j, npuzzle.getState(i, j));
             }
         }
 
@@ -18,10 +18,10 @@ public class ManhattanTilesHeuristic implements NPuzzleHeuristic {
      * Manhattan distance if the value is located at i-th row and j-th column.
      * How many places does it need to move.
      */
-    public int getManhattanDistance(int i, int j, int value) {
+    public int getManhattanDistance(int size, int i, int j, int value) {
         // There is a special rule for the blank.  If it is 0, then think of it as k*k
         if (value == 0) {
-            value = NPuzzle.SIDE * NPuzzle.SIDE;
+            value = size * size;
         }
         // values are 1...k*k - 1
         // value should be in:
@@ -29,11 +29,11 @@ public class ManhattanTilesHeuristic implements NPuzzleHeuristic {
 
         // 1 -> 0. 6 -> 1. 5 -> 0. etc. if side = 5
         // 1 -> 0, 4 -> 1, 5 -> 1, 8 -> 2 if side = 3, etc.
-        int expectedRow = (value - 1) / NPuzzle.SIDE;
+        int expectedRow = (value - 1) / size;
 
         // 1 -> 0. 6 -> 0. 5 -> 4. 23 -> 2. etc. if side = 5
         // 1 -> 0, 6 -> 2, 8 -> 1, if size = 3.
-        int expectedCol = (value - 1) % NPuzzle.SIDE;
+        int expectedCol = (value - 1) % size;
 
         return Math.abs(expectedRow - i) + Math.abs(expectedCol - j);
     }

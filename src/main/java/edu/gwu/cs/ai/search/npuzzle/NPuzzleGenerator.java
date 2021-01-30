@@ -15,11 +15,11 @@ public class NPuzzleGenerator {
      * 
      * @throws CloneNotSupportedException
      */
-    public NPuzzle generate(int targetMoveCount) throws CloneNotSupportedException {
+    public NPuzzle generate(int size, int targetMoveCount) throws CloneNotSupportedException {
 
         int moveCount = 0;
 
-        NPuzzle npuzzle = new NPuzzle();
+        NPuzzle npuzzle = new NPuzzle(size);
         Direction previousDirection = null;
 
         while (moveCount < targetMoveCount) {

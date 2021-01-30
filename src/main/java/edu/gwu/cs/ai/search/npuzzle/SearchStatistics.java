@@ -1,5 +1,10 @@
 package edu.gwu.cs.ai.search.npuzzle;
 
+/**
+ * A simple statistics holder.
+ * 
+ * @author Amrinder Arora
+ */
 public class SearchStatistics {
 
     private int numberOpen = 0;
@@ -10,9 +15,24 @@ public class SearchStatistics {
 
     private int distanceToRoot;
 
+    private int maxOpen = 0;
+
+    public void incrementOpen() {
+        numberOpen++;
+    }
+
+    public void incrementClosed() {
+        numberClosed++;
+    }
+
+    public int getMaxOpen() {
+        return maxOpen;
+    }
+
     public int getNumberOpen() {
         return numberOpen;
     }
+
 
     public void setNumberOpen(int numberOpen) {
         this.numberOpen = numberOpen;
@@ -26,14 +46,6 @@ public class SearchStatistics {
         this.numberClosed = numberClosed;
     }
 
-    public void incrementOpen() {
-        numberOpen++;
-    }
-
-    public void incrementClosed() {
-        numberClosed++;
-    }
-
     public void setFound(boolean foundArg) {
         this.found = foundArg;
     }
@@ -44,8 +56,8 @@ public class SearchStatistics {
 
     @Override
     public String toString() {
-        return "SearchStatistics [numberOpen=" + numberOpen + ", numberClosed=" + numberClosed + ", found=" + found + ", distanceToRoot=" + distanceToRoot
-                + "]";
+        return "SearchStatistics [numberOpen=" + numberOpen + ", maxOpen: " + maxOpen + ", numberClosed=" + numberClosed + ", found=" + found
+                + ", distanceToRoot=" + distanceToRoot + "]";
     }
 
     public int getDistanceToRoot() {
@@ -54,5 +66,11 @@ public class SearchStatistics {
 
     public void setDistanceToRoot(int distanceToRootArg) {
         this.distanceToRoot = distanceToRootArg;
+    }
+
+    public void setCurrentOpen(int size) {
+        if (size > maxOpen) {
+            maxOpen = size;
+        }
     }
 }

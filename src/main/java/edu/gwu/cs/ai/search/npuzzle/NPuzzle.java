@@ -10,9 +10,9 @@ import java.util.Arrays;
  */
 public class NPuzzle implements Cloneable {
     private static final String NEW_LINE = System.getProperty("line.separator");
-    public static final int SIDE = 3;
+    private int side = 4;
     private static final int ZERO = 0;
-    private int[][] stateMatrix = new int[SIDE][SIDE];
+    private int[][] stateMatrix;
     private int blankRow;
     private int blankCol;
 
@@ -40,21 +40,26 @@ public class NPuzzle implements Cloneable {
     }
 
     /** Creates an instance of n-puzzle. By default, it is solved. */
-    public NPuzzle() {
+    public NPuzzle(int sideArg) {
+        this.side = sideArg;
+        stateMatrix = new int[side][side];
+
         int counter = 1;
-        for (int i = 0; i < SIDE; i++) {
-            for (int j = 0; j < SIDE; j++) {
+        for (int i = 0; i < side; i++) {
+            for (int j = 0; j < side; j++) {
                 stateMatrix[i][j] = counter++;
             }
         }
-        stateMatrix[SIDE - 1][SIDE - 1] = 0; // Bottom Right is the blank
-        setBlank(SIDE - 1, SIDE - 1); // Bottom Right is the blank
+        stateMatrix[side - 1][side - 1] = 0; // Bottom Right is the blank
+        setBlank(side - 1, side - 1); // Bottom Right is the blank
     }
 
     public NPuzzle(int[] stateArray) {
+        this.side = (int) Math.sqrt(stateArray.length);
+        stateMatrix = new int[side][side];
         int counter = 0;
-        for (int i = 0; i < SIDE; i++) {
-            for (int j = 0; j < SIDE; j++) {
+        for (int i = 0; i < side; i++) {
+            for (int j = 0; j < side; j++) {
                 if (stateArray[counter] == 0) {
                     blankRow = i;
                     blankCol = j;
@@ -72,8 +77,8 @@ public class NPuzzle implements Cloneable {
 
     public String getPrintVersion() {
         StringBuffer sb = new StringBuffer();
-        for (int row = 0; row < SIDE; row++) {
-            for (int col = 0; col < SIDE; col++) {
+        for (int row = 0; row < side; row++) {
+            for (int col = 0; col < side; col++) {
                 if (stateMatrix[row][col] == 0) {
                     sb.append("    ");
                 } else {
@@ -126,10 +131,10 @@ public class NPuzzle implements Cloneable {
     public boolean isSolved() {
         int counter = 1;
         // Just traverses left to right, and then top to down and matches that to the counter
-        for (int i = 0; i < SIDE; i++) {
-            for (int j = 0; j < SIDE; j++) {
+        for (int i = 0; i < side; i++) {
+            for (int j = 0; j < side; j++) {
                 // This is for the blank
-                if (i == SIDE - 1 & j == SIDE - 1) {
+                if (i == side - 1 & j == side - 1) {
                     continue;
                 }
                 if (this.stateMatrix[i][j] != counter++) {
@@ -143,9 +148,9 @@ public class NPuzzle implements Cloneable {
     @Override
     public NPuzzle clone() throws CloneNotSupportedException {
         NPuzzle np2 = (NPuzzle) super.clone();
-        np2.stateMatrix = new int[SIDE][SIDE];
-        for (int i = 0; i < SIDE; i++) {
-            for (int j = 0; j < SIDE; j++) {
+        np2.stateMatrix = new int[side][side];
+        for (int i = 0; i < side; i++) {
+            for (int j = 0; j < side; j++) {
                 np2.stateMatrix[i][j] = this.stateMatrix[i][j];
             }
         }
@@ -155,9 +160,9 @@ public class NPuzzle implements Cloneable {
 
     public boolean movePossible(Direction direction) {
         if (blankRow == 0 && direction == Direction.UP
-                || blankRow == SIDE - 1 && direction == Direction.DOWN
+                || blankRow == side - 1 && direction == Direction.DOWN
                 || blankCol == 0 && direction == Direction.LEFT
-                || blankCol == SIDE - 1 && direction == Direction.RIGHT) {
+                || blankCol == side - 1 && direction == Direction.RIGHT) {
             return false;
         }
         return true;
@@ -187,5 +192,9 @@ public class NPuzzle implements Cloneable {
             dist++;
         }
         return dist;
+    }
+
+    public int getSize() {
+        return this.side;
     }
 }

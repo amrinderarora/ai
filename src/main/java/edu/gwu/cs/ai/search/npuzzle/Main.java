@@ -4,8 +4,9 @@ import edu.gwu.cs.ai.search.Strategy;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        int targetMoveCount = 17;
-        NPuzzle nPuzzle = new NPuzzleGenerator().generate(targetMoveCount);
+        int targetMoveCount = 12;
+        int puzzleSize = 3;
+        NPuzzle nPuzzle = new NPuzzleGenerator().generate(puzzleSize, targetMoveCount);
         System.out.println("targetMoveCount: " + targetMoveCount + ", puzzle:\r\n" + nPuzzle.getPrintVersion());
 
         // We set this puzzle as the "root"
