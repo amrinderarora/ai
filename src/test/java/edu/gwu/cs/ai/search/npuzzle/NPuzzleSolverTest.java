@@ -1,10 +1,7 @@
-package edu.gwu.cs.ai.csp;
+package edu.gwu.cs.ai.search.npuzzle;
 
 import org.junit.Assert;
 import org.junit.Test;
-
-import edu.gwu.cs.ai.search.npuzzle.Direction;
-import edu.gwu.cs.ai.search.npuzzle.NPuzzle;
 
 public class NPuzzleSolverTest {
 
