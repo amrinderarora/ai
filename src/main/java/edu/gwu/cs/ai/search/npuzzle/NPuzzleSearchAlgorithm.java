@@ -3,11 +3,16 @@ package edu.gwu.cs.ai.search.npuzzle;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
+import edu.gwu.cs.ai.search.SearchAlgorithm;
+import edu.gwu.cs.ai.search.SearchHeuristic;
+import edu.gwu.cs.ai.search.SearchState;
+import edu.gwu.cs.ai.search.SearchStatistics;
 import edu.gwu.cs.ai.search.Strategy;
 
-public class NPuzzleSearchAlgorithm {
+public class NPuzzleSearchAlgorithm implements SearchAlgorithm {
 
     public static final String NEW_LINE = "\r\n";
 
@@ -22,36 +27,38 @@ public class NPuzzleSearchAlgorithm {
      * @param nPuzzle
      * @throws Exception
      */
-    public SearchStatistics solveTreeSearch(NPuzzle nPuzzle, Strategy strategy, NPuzzleHeuristic heuristicAlgorithm) throws Exception {
+    @Override
+    public SearchStatistics solveTreeSearch(SearchState searchState, Strategy strategy, SearchHeuristic heuristicAlgorithm) throws Exception {
 
+        NPuzzle nPuzzle = (NPuzzle) searchState;
         SearchStatistics searchStats = new SearchStatistics();
+        searchStats.setStartTime();
 
         if (nPuzzle.isSolved()) {
             searchStats.setFound(true);
             return searchStats;
         }
 
-        Deque<NPuzzle> openSet = new ArrayDeque<>();
+        Deque<SearchState> openSet = new ArrayDeque<>();
         openSet.addLast(nPuzzle);
         searchStats.incrementOpen();
 
         searchWhile: while (!openSet.isEmpty()) {
-            NPuzzle bestNode = openSet.removeFirst();
-            for (Direction dir : Direction.getAllDirections()) {
-                if (bestNode.movePossible(dir)) {
-                    NPuzzle nextState = bestNode.moveBlank(dir);
-                    openSet.addLast(nextState);
-                    searchStats.incrementOpen();
-                    searchStats.setCurrentOpen(openSet.size());
-                    if (nextState.isSolved()) {
-                        int distanceToRoot = nextState.getDistanceToRoot();
-                        searchStats.setFound(true);
-                        searchStats.setDistanceToRoot(distanceToRoot);
-                        break searchWhile;
-                    }
+            NPuzzle bestNode = (NPuzzle) openSet.removeFirst();
+            Map<SearchState, Double> successors = bestNode.getSuccessors();
+            for (SearchState nextState : successors.keySet()) {
+                openSet.addLast(nextState);
+                searchStats.incrementOpen();
+                searchStats.setCurrentOpen(openSet.size());
+                if (nextState.isGoalState()) {
+                    int distanceToRoot = ((NPuzzle) nextState).getDistanceToRoot();
+                    searchStats.setFound(true);
+                    searchStats.setDistanceToRoot(distanceToRoot);
+                    break searchWhile;
                 }
             }
         }
+        searchStats.setFinishTime();
         return searchStats;
     }
 
@@ -66,8 +73,10 @@ public class NPuzzleSearchAlgorithm {
      * @param nPuzzle
      * @throws Exception
      */
-    public SearchStatistics solveGraphSearch(NPuzzle nPuzzle, Strategy strategy, NPuzzleHeuristic heuristicAlgorithm) throws Exception {
+    @Override
+    public SearchStatistics solveGraphSearch(SearchState searchState, Strategy strategy, SearchHeuristic heuristicAlgorithm) throws Exception {
 
+        NPuzzle nPuzzle = (NPuzzle) searchState;
         SearchStatistics searchStats = new SearchStatistics();
 
         if (nPuzzle.isSolved()) {
@@ -82,19 +91,17 @@ public class NPuzzleSearchAlgorithm {
 
         searchWhile: while (!openSet.isEmpty()) {
             NPuzzle bestNode = openSet.removeFirst();
-            for (Direction dir : Direction.getAllDirections()) {
-                if (bestNode.movePossible(dir)) {
-                    NPuzzle nextState = bestNode.moveBlank(dir);
-                    if (!closedSet.contains(nextState)) {
-                        openSet.addLast(nextState);
-                        searchStats.incrementOpen();
-                        searchStats.setCurrentOpen(openSet.size());
-                        if (nextState.isSolved()) {
-                            int distanceToRoot = nextState.getDistanceToRoot();
-                            searchStats.setFound(true);
-                            searchStats.setDistanceToRoot(distanceToRoot);
-                            break searchWhile;
-                        }
+            Map<SearchState, Double> successors = bestNode.getSuccessors();
+            for (SearchState nextState : successors.keySet()) {
+                if (!closedSet.contains(nextState)) {
+                    openSet.addLast((NPuzzle) nextState);
+                    searchStats.incrementOpen();
+                    searchStats.setCurrentOpen(openSet.size());
+                    if (nextState.isGoalState()) {
+                        int distanceToRoot = ((NPuzzle) nextState).getDistanceToRoot();
+                        searchStats.setFound(true);
+                        searchStats.setDistanceToRoot(distanceToRoot);
+                        break searchWhile;
                     }
                 }
             }

@@ -1,9 +1,13 @@
 package edu.gwu.cs.ai.search.npuzzle;
 
-public class ManhattanTilesHeuristic implements NPuzzleHeuristic {
+import edu.gwu.cs.ai.search.SearchHeuristic;
+import edu.gwu.cs.ai.search.SearchState;
+
+public class ManhattanTilesHeuristic implements SearchHeuristic {
 
     @Override
-    public int evaluate(NPuzzle npuzzle) {
+    public double evaluate(SearchState searchState) {
+        NPuzzle npuzzle = (NPuzzle) searchState;
         int manhattanDistance = 0;
         for (int i = 0; i < npuzzle.getSize(); i++) {
             for (int j = 0; j < npuzzle.getSize(); j++) {
@@ -36,5 +40,10 @@ public class ManhattanTilesHeuristic implements NPuzzleHeuristic {
         int expectedCol = (value - 1) % size;
 
         return Math.abs(expectedRow - i) + Math.abs(expectedCol - j);
+    }
+
+    @Override
+    public boolean isOptimistic() {
+        return true;
     }
 }

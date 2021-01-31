@@ -1,6 +1,10 @@
 package edu.gwu.cs.ai.search.npuzzle;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+import edu.gwu.cs.ai.search.SearchState;
 
 /**
  * Models the state of the n-puzzle.
@@ -8,7 +12,7 @@ import java.util.Arrays;
  * 
  * @author amrinder
  */
-public class NPuzzle implements Cloneable {
+public class NPuzzle implements Cloneable, SearchState {
     private static final String NEW_LINE = System.getProperty("line.separator");
     private int side = 4;
     private static final int ZERO = 0;
@@ -97,11 +101,17 @@ public class NPuzzle implements Cloneable {
      * 
      * @throws CloneNotSupportedException
      */
-    public NPuzzle moveBlank(Direction direction) throws CloneNotSupportedException {
+    public NPuzzle moveBlank(Direction direction) {
         if (!movePossible(direction)) {
             throw new IllegalArgumentException("Move not possible: " + direction);
         }
-        NPuzzle nPuzzleNewState = this.clone();
+        NPuzzle nPuzzleNewState = null;
+        try {
+            nPuzzleNewState = this.clone();
+        } catch (CloneNotSupportedException e) {
+            System.err.println("Exception cloning, program will terminate");
+            throw new RuntimeException("Exception in cloning a state");
+        }
         if (direction == Direction.UP) {
             nPuzzleNewState.stateMatrix[blankRow][blankCol] = stateMatrix[blankRow - 1][blankCol];
             nPuzzleNewState.setBlank(blankRow - 1, blankCol);
@@ -196,5 +206,22 @@ public class NPuzzle implements Cloneable {
 
     public int getSize() {
         return this.side;
+    }
+
+    @Override
+    public boolean isGoalState() {
+        return this.isSolved();
+    }
+
+    @Override
+    public Map<SearchState, Double> getSuccessors() {
+        Map<SearchState, Double> successors = new HashMap<>();
+        for (Direction dir : Direction.getAllDirections()) {
+            if (this.movePossible(dir)) {
+                NPuzzle nextState = this.moveBlank(dir);
+                successors.put(nextState, 1.0d);
+            }
+        }
+        return successors;
     }
 }

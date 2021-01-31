@@ -1,4 +1,4 @@
-package edu.gwu.cs.ai.search.npuzzle;
+package edu.gwu.cs.ai.search;
 
 /**
  * A simple statistics holder.
@@ -16,6 +16,10 @@ public class SearchStatistics {
     private int distanceToRoot;
 
     private int maxOpen = 0;
+
+    private long finishTime;
+
+    private long startTime;
 
     public void incrementOpen() {
         numberOpen++;
@@ -56,8 +60,27 @@ public class SearchStatistics {
 
     @Override
     public String toString() {
-        return "SearchStatistics [numberOpen=" + numberOpen + ", maxOpen: " + maxOpen + ", numberClosed=" + numberClosed + ", found=" + found
+        return "SearchStatistics [totalTime= " + getElapsedTimeNanos() + ", numberOpen=" + numberOpen + ", maxOpen: " + maxOpen + ", numberClosed="
+                + numberClosed
+                + ", found=" + found
                 + ", distanceToRoot=" + distanceToRoot + "]";
+    }
+
+    /**
+     * Returs the elapsed time in nanos.
+     * 
+     * @return
+     */
+    public long getElapsedTimeNanos() {
+        return finishTime - startTime;
+    }
+
+    public void setFinishTime() {
+        this.finishTime = System.currentTimeMillis();
+    }
+
+    public void setStartTime() {
+        this.startTime = System.currentTimeMillis();
     }
 
     public int getDistanceToRoot() {
