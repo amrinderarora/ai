@@ -9,35 +9,57 @@ public class Variable {
 
     private String name;
 
-    private Set<DomainValue> values = new TreeSet<>();
+    private String value;
 
-    public Variable(String name) {
-        this.name = name;
+    private Set<DomainValue> possibleValues = new TreeSet<>();
+
+    private Integer index;
+
+    public Variable(String nameArg) {
+        this.name = nameArg;
     }
 
-    public Variable(int name) {
-        this.name = String.valueOf(name);
+    public Variable(int indexArg) {
+        this.name = String.valueOf(indexArg);
+        this.index = indexArg;
+    }
+
+    public Variable(String nameArg, int indexArg) {
+        this.name = nameArg;
+        this.index = indexArg;
     }
 
     public Variable(String name, Collection<DomainValue> valuesArg) {
         this.name = name;
-        this.values.addAll(valuesArg);
+        this.possibleValues.addAll(valuesArg);
     }
 
     public Variable(String name, DomainValue[] valuesArg) {
         this.name = name;
-        this.values.addAll(Arrays.asList(valuesArg));
+        this.possibleValues.addAll(Arrays.asList(valuesArg));
     }
 
     public String getName() {
         return name;
     }
 
-    public Collection<DomainValue> getPossibleValues() {
-        return values;
+    public String getValue() {
+        return value;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public Collection<DomainValue> getPossibleValues() {
+        return possibleValues;
+    }
+
+    public void removePossibleValues(DomainValue dValArg) {
+        possibleValues.remove(dValArg);
+    }
+
+    public Integer getIndex() {
+        return this.index;
     }
 }

@@ -1,11 +1,10 @@
 package edu.gwu.cs.ai.csp;
 
 import java.util.ArrayDeque;
+import java.util.Collection;
 import java.util.Deque;
-import java.util.Map;
 
 import edu.gwu.cs.ai.search.SearchStatistics;
-import edu.gwu.cs.ai.search.npuzzle.NPuzzle;
 
 public class GenericCSPSolver implements CSPSearchAlgorithm {
 
@@ -18,11 +17,13 @@ public class GenericCSPSolver implements CSPSearchAlgorithm {
      * @throws Exception
      */
     @Override
-    public SearchStatistics solve(CSPSearchProblem searchProblem, CSPSearchState initialState) {
+    public SearchStatistics solve(CSP searchProblem) {
 
         SearchStatistics searchStats = new SearchStatistics();
 
-        if (initialState.isSolved()) {
+        CSPSearchState initialState = searchProblem.getInitialState();
+
+        if (initialState.isFullyAssigned()) {
             searchStats.setFound(true);
             searchStats.stopTimer();
             return searchStats;
@@ -36,14 +37,14 @@ public class GenericCSPSolver implements CSPSearchAlgorithm {
             CSPSearchState bestNode = null;
             bestNode = (CSPSearchState) openSet.removeLast();
 
-            Map<CSPSearchState, Double> successors = bestNode.getSuccessors();
-            for (CSPSearchState nextNode : successors.keySet()) {
+            Collection<CSPSearchState> successors = bestNode.getSuccessors();
+            for (CSPSearchState nextNode : successors) {
                 if (!openSet.contains(nextNode)) {
                     openSet.addLast(nextNode);
                     searchStats.incrementOpen();
                     searchStats.setCurrentOpen(openSet.size());
-                    if (nextNode.isSolved()) {
-                        int distanceToRoot = ((NPuzzle) nextNode).getDistanceToRoot();
+                    if (nextNode.isFullyAssigned()) {
+                        int distanceToRoot = 0;
                         searchStats.setFound(true);
                         searchStats.setDistanceToRoot(distanceToRoot);
                         break searchWhile;
