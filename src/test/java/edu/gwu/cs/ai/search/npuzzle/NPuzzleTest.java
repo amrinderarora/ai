@@ -11,7 +11,7 @@ public class NPuzzleTest {
         int[] stateArray = { 1, 2, 3, 4, 5, 6, 7, 8, 0 };
 
         NPuzzle currentState = new NPuzzle(stateArray);
-        Assert.assertTrue(currentState.isSolved());
+        Assert.assertTrue(currentState.isGoalState());
     }
 
     @Test
@@ -20,7 +20,7 @@ public class NPuzzleTest {
         int[] stateArray = { 1, 2, 3, 5, 4, 6, 7, 8, 0 };
 
         NPuzzle currentState = new NPuzzle(stateArray);
-        Assert.assertFalse(currentState.isSolved());
+        Assert.assertFalse(currentState.isGoalState());
     }
 
     @Test
@@ -31,6 +31,6 @@ public class NPuzzleTest {
         NPuzzle currentState = new NPuzzle(stateArray);
         currentState.moveBlank(Direction.RIGHT);
         currentState.moveBlank(Direction.RIGHT);
-        Assert.assertTrue(currentState.isSolved());
+        Assert.assertTrue(currentState.isGoalState());
     }
 }

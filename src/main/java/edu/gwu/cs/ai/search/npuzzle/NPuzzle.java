@@ -133,28 +133,6 @@ public class NPuzzle implements Cloneable, SearchState {
         return nPuzzleNewState;
     }
 
-    /**
-     * Checks if the npuzzle is in solved state.
-     * 
-     * @return True if the puzzle is solved after this move.
-     */
-    public boolean isSolved() {
-        int counter = 1;
-        // Just traverses left to right, and then top to down and matches that to the counter
-        for (int i = 0; i < side; i++) {
-            for (int j = 0; j < side; j++) {
-                // This is for the blank
-                if (i == side - 1 & j == side - 1) {
-                    continue;
-                }
-                if (this.stateMatrix[i][j] != counter++) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
     @Override
     public NPuzzle clone() throws CloneNotSupportedException {
         NPuzzle np2 = (NPuzzle) super.clone();
@@ -210,7 +188,20 @@ public class NPuzzle implements Cloneable, SearchState {
 
     @Override
     public boolean isGoalState() {
-        return this.isSolved();
+        int counter = 1;
+        // Just traverses left to right, and then top to down and matches that to the counter
+        for (int i = 0; i < side; i++) {
+            for (int j = 0; j < side; j++) {
+                // This is for the blank
+                if (i == side - 1 & j == side - 1) {
+                    continue;
+                }
+                if (this.stateMatrix[i][j] != counter++) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     @Override

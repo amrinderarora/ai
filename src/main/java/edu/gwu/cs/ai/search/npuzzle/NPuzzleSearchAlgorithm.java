@@ -32,9 +32,8 @@ public class NPuzzleSearchAlgorithm implements SearchAlgorithm {
 
         NPuzzle nPuzzle = (NPuzzle) searchState;
         SearchStatistics searchStats = new SearchStatistics();
-        searchStats.setStartTime();
 
-        if (nPuzzle.isSolved()) {
+        if (nPuzzle.isGoalState()) {
             searchStats.setFound(true);
             return searchStats;
         }
@@ -44,21 +43,31 @@ public class NPuzzleSearchAlgorithm implements SearchAlgorithm {
         searchStats.incrementOpen();
 
         searchWhile: while (!openSet.isEmpty()) {
-            NPuzzle bestNode = (NPuzzle) openSet.removeFirst();
+            NPuzzle bestNode = null;
+            if (strategy == Strategy.BFS) {
+                bestNode = (NPuzzle) openSet.removeFirst();
+            } else if (strategy == Strategy.DFS) {
+                bestNode = (NPuzzle) openSet.removeLast();
+            } else {
+                throw new IllegalArgumentException("Strategy not supported: " + strategy);
+            }
+
             Map<SearchState, Double> successors = bestNode.getSuccessors();
-            for (SearchState nextState : successors.keySet()) {
-                openSet.addLast(nextState);
-                searchStats.incrementOpen();
-                searchStats.setCurrentOpen(openSet.size());
-                if (nextState.isGoalState()) {
-                    int distanceToRoot = ((NPuzzle) nextState).getDistanceToRoot();
-                    searchStats.setFound(true);
-                    searchStats.setDistanceToRoot(distanceToRoot);
-                    break searchWhile;
+            for (SearchState nextNode : successors.keySet()) {
+                if (!openSet.contains(nextNode)) {
+                    openSet.addLast(nextNode);
+                    searchStats.incrementOpen();
+                    searchStats.setCurrentOpen(openSet.size());
+                    if (nextNode.isGoalState()) {
+                        int distanceToRoot = ((NPuzzle) nextNode).getDistanceToRoot();
+                        searchStats.setFound(true);
+                        searchStats.setDistanceToRoot(distanceToRoot);
+                        break searchWhile;
+                    }
                 }
             }
         }
-        searchStats.setFinishTime();
+        searchStats.stopTimer();
         return searchStats;
     }
 
@@ -79,7 +88,7 @@ public class NPuzzleSearchAlgorithm implements SearchAlgorithm {
         NPuzzle nPuzzle = (NPuzzle) searchState;
         SearchStatistics searchStats = new SearchStatistics();
 
-        if (nPuzzle.isSolved()) {
+        if (nPuzzle.isGoalState()) {
             searchStats.setFound(true);
             return searchStats;
         }
@@ -90,15 +99,22 @@ public class NPuzzleSearchAlgorithm implements SearchAlgorithm {
         searchStats.incrementOpen();
 
         searchWhile: while (!openSet.isEmpty()) {
-            NPuzzle bestNode = openSet.removeFirst();
+            NPuzzle bestNode = null;
+            if (strategy == Strategy.BFS) {
+                bestNode = (NPuzzle) openSet.removeFirst();
+            } else if (strategy == Strategy.DFS) {
+                bestNode = (NPuzzle) openSet.removeLast();
+            } else {
+                throw new IllegalArgumentException("Strategy not supported: " + strategy);
+            }
             Map<SearchState, Double> successors = bestNode.getSuccessors();
-            for (SearchState nextState : successors.keySet()) {
-                if (!closedSet.contains(nextState)) {
-                    openSet.addLast((NPuzzle) nextState);
+            for (SearchState nextNode : successors.keySet()) {
+                if (!closedSet.contains(nextNode) && !openSet.contains(nextNode)) {
+                    openSet.addLast((NPuzzle) nextNode);
                     searchStats.incrementOpen();
                     searchStats.setCurrentOpen(openSet.size());
-                    if (nextState.isGoalState()) {
-                        int distanceToRoot = ((NPuzzle) nextState).getDistanceToRoot();
+                    if (nextNode.isGoalState()) {
+                        int distanceToRoot = ((NPuzzle) nextNode).getDistanceToRoot();
                         searchStats.setFound(true);
                         searchStats.setDistanceToRoot(distanceToRoot);
                         break searchWhile;

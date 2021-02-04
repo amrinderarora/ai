@@ -1,5 +1,10 @@
 package edu.gwu.cs.ai.search;
 
+/**
+ * A standard AI search algorithm.
+ * 
+ * @author Amrinder Arora
+ */
 public interface SearchAlgorithm {
 
     /**
@@ -10,10 +15,10 @@ public interface SearchAlgorithm {
      * Does not use priority queue for cost, so heuristic is for your mental satisfaction only. Please provide a good one, and please be
      * consistent, positive and optimistic.
      * 
-     * @param nPuzzle
+     * @param searchState
      * @throws Exception
      */
-    SearchStatistics solveTreeSearch(SearchState nPuzzle, Strategy strategy, SearchHeuristic heuristicAlgorithm) throws Exception;
+    SearchStatistics solveTreeSearch(SearchState searchState, Strategy strategy, SearchHeuristic heuristicAlgorithm) throws Exception;
 
     /**
      * Solves using the starting npuzzle using graph search (maintains a closed list).
@@ -23,9 +28,9 @@ public interface SearchAlgorithm {
      * Does not use priority queue for cost, so heuristic is for your mental satisfaction only. Please provide a good one, and please be
      * consistent, positive and optimistic.
      * 
-     * @param nPuzzle
+     * @param searchState
      * @throws Exception
      */
-    SearchStatistics solveGraphSearch(SearchState nPuzzle, Strategy strategy, SearchHeuristic heuristicAlgorithm) throws Exception;
+    SearchStatistics solveGraphSearch(SearchState searchState, Strategy strategy, SearchHeuristic heuristicAlgorithm) throws Exception;
 
 }

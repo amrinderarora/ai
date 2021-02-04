@@ -7,6 +7,8 @@ package edu.gwu.cs.ai.search;
  */
 public class SearchStatistics {
 
+    private static final int LARGE_BASE = 1000000;
+
     private int numberOpen = 0;
 
     private int numberClosed = 0;
@@ -17,12 +19,19 @@ public class SearchStatistics {
 
     private int maxOpen = 0;
 
-    private long finishTime;
+    private Long finishTime;
 
     private long startTime;
 
+    public SearchStatistics() {
+        startTimer();
+    }
+
     public void incrementOpen() {
         numberOpen++;
+        if (numberOpen % LARGE_BASE == 0) {
+            System.out.println("number Open: " + numberOpen);
+        }
     }
 
     public void incrementClosed() {
@@ -33,21 +42,21 @@ public class SearchStatistics {
         return maxOpen;
     }
 
-    public int getNumberOpen() {
+    public int getTotalOpen() {
         return numberOpen;
     }
 
 
-    public void setNumberOpen(int numberOpen) {
-        this.numberOpen = numberOpen;
+    public void setTotalOpen(int totalOpenArg) {
+        this.numberOpen = totalOpenArg;
     }
 
-    public int getNumberClosed() {
+    public int getTotalClosed() {
         return numberClosed;
     }
 
-    public void setNumberClosed(int numberClosed) {
-        this.numberClosed = numberClosed;
+    public void setTotalClosed(int totalClosedArg) {
+        this.numberClosed = totalClosedArg;
     }
 
     public void setFound(boolean foundArg) {
@@ -60,27 +69,32 @@ public class SearchStatistics {
 
     @Override
     public String toString() {
-        return "SearchStatistics [totalTime= " + getElapsedTimeNanos() + ", numberOpen=" + numberOpen + ", maxOpen: " + maxOpen + ", numberClosed="
+        return "SearchStatistics [totalTime in Millis= " + getElapsedTimeMillis() + ", numberOpen=" + numberOpen + ", maxOpen: " + maxOpen + ", numberClosed="
                 + numberClosed
                 + ", found=" + found
                 + ", distanceToRoot=" + distanceToRoot + "]";
     }
 
     /**
-     * Returs the elapsed time in nanos.
+     * Returs the elapsed time in milli seconds. If the timer was stopped already, it uses that.
+     * If the timer was not stopped yet, it stops it now.
      * 
      * @return
      */
-    public long getElapsedTimeNanos() {
+    public long getElapsedTimeMillis() {
+        if (finishTime == null) {
+            stopTimer();
+        }
         return finishTime - startTime;
     }
 
-    public void setFinishTime() {
+    public void stopTimer() {
         this.finishTime = System.currentTimeMillis();
     }
 
-    public void setStartTime() {
+    public void startTimer() {
         this.startTime = System.currentTimeMillis();
+        finishTime = null;
     }
 
     public int getDistanceToRoot() {
