@@ -1,5 +1,6 @@
 package edu.gwu.cs.ai.csp.tileplacement;
 
+import java.awt.Point;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ public class TilePlacementProblemGenerator {
         TilePlacementProblemGenerator tppg = new TilePlacementProblemGenerator();
 
         TilePlacementProblem tpp = tppg.generateProblem();
-        String fileContent = getFileContent(tpp);
+        String fileContent = tpp.getProblemDescription() + System.lineSeparator() + System.lineSeparator() + tpp.getSolutionKey();
 
         /** Writes everything to a file. */
         FileWriter fw = new FileWriter("tilesproblem_" + System.currentTimeMillis() + ".txt");
@@ -23,56 +24,54 @@ public class TilePlacementProblemGenerator {
     public TilePlacementProblem generateProblem() {
         TilePlacementProblem tilePlacementProblem = new TilePlacementProblem();
 
-        /** Generates the landscape. */
+        // Generates the landscape.
         int landscape_size = 20;
         Landscape landscape = new Landscape(landscape_size, landscape_size);
         tilePlacementProblem.setLandscape(landscape);
 
-        /** Generates some tiles. */
+        // Generates some tiles.
         int num_tiles = 25;
         List<Tile> tiles = new ArrayList<>();
         for (int i = 0; i < num_tiles; i++) {
             Tile tile = new Tile();
+            tile.setID(i);
             tile.setSize(4);
-            tile.setOrientation(TileOrientation.getRandomTileOrientation());
+            tile.setOrientation(TileShape.getRandomTileShape());
+            tile.rotateRandomly();
             tiles.add(tile);
         }
         tilePlacementProblem.setTiles(tiles);
 
-        /** Generates the target. */
+        // Generates the "puzzle" - the color target
         Map<Integer, Integer> colorsTarget = new HashMap<>();
-        colorsTarget.put(1, 100);
-        colorsTarget.put(2, 100);
-        colorsTarget.put(3, 100);
-        colorsTarget.put(4, 100);
+        colorsTarget.put(1, 0);
+        colorsTarget.put(2, 0);
+        colorsTarget.put(3, 0);
+        colorsTarget.put(4, 0);
+        int counter = 0;
+        for (Tile tile : tiles) {
+            counter++;
+            Point bottomLeft = getBLCorner(counter);
+            int[][] exposedCells = getExposedCells(tile, bottomLeft);
+            for (int i = 0; i < 4; i++) {
+                for (int j = 0; j < 4; j++) {
+                    if (exposedCells[i][j] > 0) {
+                        colorsTarget.put(exposedCells[i][j], colorsTarget.get(exposedCells[i][j]) + 1);
+                    }
+                }
+            }
+        }
         tilePlacementProblem.setColorsTarget(colorsTarget);
 
         return tilePlacementProblem;
     }
 
-    /** Prepares the file content. */
-    private static String getFileContent(TilePlacementProblem tpp) {
-        StringBuffer sb = new StringBuffer();
-        sb.append("# Tiles Problem, generated at: " + new java.util.Date() + System.lineSeparator());
-        sb.append("# Landscape" + System.lineSeparator());
-        sb.append(tpp.getLandscape());
-        sb.append(System.lineSeparator());
-
-        sb.append("# Tiles: " + System.lineSeparator());
-        for (Tile tile : tpp.getTiles()) {
-            sb.append(tile + System.lineSeparator());
-        }
-        sb.append(System.lineSeparator());
-
-        sb.append("# Targets: " + System.lineSeparator());
-        for (Integer color : tpp.getColorsTarget().keySet()) {
-            if (color > 0) {
-                sb.append(color + ":" + tpp.getColorsTarget().get(color) + System.lineSeparator());
-            }
-        }
-        sb.append(System.lineSeparator());
-
-        return sb.toString();
+    private int[][] getExposedCells(Tile tile, Point bottomLeft) {
+        int[][] exposedCells = new int[4][4];
+        return exposedCells;
     }
 
+    private Point getBLCorner(int counter) {
+        return new Point(0, 0);
+    }
 }

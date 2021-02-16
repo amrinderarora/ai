@@ -3,7 +3,7 @@ package edu.gwu.cs.ai.csp.tileplacement;
 import java.security.SecureRandom;
 import java.util.Random;
 
-public enum TileOrientation {
+public enum TileShape {
 
     OUTER_BOUNDARY, // The tile, that only covers the outer boundary
     FULL_BLOCK, // The tile, that covers the entire area
@@ -12,7 +12,7 @@ public enum TileOrientation {
 
     private static Random random = new SecureRandom();
 
-    public static TileOrientation getRandomTileOrientation() {
+    public static TileShape getRandomTileShape() {
         double rndDouble = random.nextDouble();
         if (rndDouble < 1.0 / 3.0) {
             return OUTER_BOUNDARY;

@@ -2,18 +2,21 @@ package edu.gwu.cs.ai.csp.tileplacement;
 
 public class Tile {
 
+    /** An identifier. */
+    private Integer id;
+
     /** The size of this square tile. */
     private int size = 0;
 
     /** Tile orientation. Generally, the tiles can be rotated freely. */
-    private TileOrientation tileOrientation = null;
+    private TileShape TileShape = null;
 
-    public TileOrientation getTileOrientation() {
-        return tileOrientation;
+    public TileShape getTileShape() {
+        return TileShape;
     }
 
-    public void setTileOrientation(TileOrientation tileOrientation) {
-        this.tileOrientation = tileOrientation;
+    public void setTileShape(TileShape TileShape) {
+        this.TileShape = TileShape;
     }
 
     public int getSize() {
@@ -24,12 +27,33 @@ public class Tile {
         this.size = sizeArg;
     }
 
-    public void setOrientation(TileOrientation tileOrientationArg) {
-        this.tileOrientation = tileOrientationArg;
+    public void setOrientation(TileShape TileShapeArg) {
+        this.TileShape = TileShapeArg;
+    }
+
+    public Integer getID() {
+        return id;
+    }
+
+    public void setID(int idArg) {
+        this.id = idArg;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void rotateRandomly() {
+        // Rotation only affects the el shape, and for now, it does not do anything.
+        if (TileShape == TileShape.EL_SHAPE) {
+            // TODO: Rotate this el tile
+        }
     }
 
     public String toString() {
-        return size + " " + tileOrientation;
+        if (id != null) {
+            return id + " " + size + " " + TileShape;
+        }
+        return size + " " + TileShape;
     }
-
 }
