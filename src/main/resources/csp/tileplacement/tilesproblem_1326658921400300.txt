@@ -1,0 +1,62 @@
+# Tiles Problem, generated at: Tue Feb 16 23:27:21 EST 2021
+# Landscape
+4 2     1 2 2 3 1 4 2 2   4 2 1 3 3 2 2 
+  4 1 2 2 2 1 4 4 3     2 2 2 1   4 2 3 
+  4 2 1 2 4   3 2 4   1 4 1 3 1 2   4 4 
+    1 2 1 1 4 2   2 3 4   1 2     1 3 4 
+4   4   1 4 1   4 2 2 4 2 4   4 2 2 2 1 
+4   4 2 3 4   1 1   1 4 1 4 2 1 3   4 3 
+1 2 4   3 4 3 2 2 1 1 4   3   2 1   3   
+  4 3 1   2 3 2 4 3   3   4     3 3 1 4 
+3   4 1     2 4 1 3   2 2   1 4 2 1 3 2 
+3 2   1 2     1 4     2 2   4 4 2   3 1 
+  2   4 2 1 1 3 1   3 1 2 4 1 4 4 4 2 4 
+1 4 1 4 2 4 1   4 1 3 4 3 3 4 2   2 4   
+1 4 4 3 1 3 1     3 1 1 3   3 3 4   3 4 
+3 4 1 1 1 1 1 3 4 1 1 3 2 2   1 4 1 4   
+2 2 4   2 3 2 3 3 2 2 2 4 3 4 2 4 2     
+  2   3 2   2   3 1 2 1 3 3 2 3 1   1 1 
+1 2 3 1     2 4 1   2 4 3 4     3 1   3 
+3 4 2 4 2 4 3 1 1 2 3   3 3 3 4 4 4   4 
+3   4 3 3 1 1 3     3   3 2 2 3 1 3   1 
+2 1 4 4   3 3 1 3   4 3 2 1 2 1 4 3 4 3 
+
+# Tiles: 
+{OUTER_BOUNDARY=8, EL_SHAPE=6, FULL_BLOCK=11}
+
+# Targets: 
+1:12
+2:17
+3:19
+4:21
+
+
+
+# Tiles Problem Solution Key, generated at: Tue Feb 16 23:27:21 EST 2021
+# Tiles: 
+0 4 FULL_BLOCK
+1 4 FULL_BLOCK
+2 4 FULL_BLOCK
+3 4 FULL_BLOCK
+4 4 EL_SHAPE
+5 4 EL_SHAPE
+6 4 EL_SHAPE
+7 4 FULL_BLOCK
+8 4 EL_SHAPE
+9 4 OUTER_BOUNDARY
+10 4 OUTER_BOUNDARY
+11 4 FULL_BLOCK
+12 4 FULL_BLOCK
+13 4 OUTER_BOUNDARY
+14 4 OUTER_BOUNDARY
+15 4 FULL_BLOCK
+16 4 EL_SHAPE
+17 4 FULL_BLOCK
+18 4 OUTER_BOUNDARY
+19 4 OUTER_BOUNDARY
+20 4 OUTER_BOUNDARY
+21 4 OUTER_BOUNDARY
+22 4 FULL_BLOCK
+23 4 FULL_BLOCK
+24 4 EL_SHAPE
+
