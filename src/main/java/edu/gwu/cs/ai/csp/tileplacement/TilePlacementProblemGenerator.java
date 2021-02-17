@@ -14,10 +14,10 @@ public class TilePlacementProblemGenerator {
 
         for (int i = 0; i < 10; i++) {
             TilePlacementProblem tpp = tppg.generateProblem(20);
-            String fileContent = tpp.getProblemDescription() + System.lineSeparator() + System.lineSeparator() + tpp.getSolutionKey();
+            String fileContent = tpp.getProblemDescription(); /// + System.lineSeparator() + System.lineSeparator() + tpp.getSolutionKey();
 
             // Writes everything to a file.
-            FileWriter fw = new FileWriter("tilesproblem_" + System.nanoTime() + ".txt");
+            FileWriter fw = new FileWriter("src/main/resources/csp/tileplacement/tilesproblem_" + System.nanoTime() + ".txt");
             fw.write(fileContent);
             fw.close();
         }
