@@ -9,14 +9,16 @@ public class Tile {
     private int size = 0;
 
     /** Tile orientation. Generally, the tiles can be rotated freely. */
-    private TileShape TileShape = null;
+    private TileShape tileShape = null;
+
+    static final int TILE_SIZE = 4;
 
     public TileShape getTileShape() {
-        return TileShape;
+        return tileShape;
     }
 
     public void setTileShape(TileShape TileShape) {
-        this.TileShape = TileShape;
+        this.tileShape = TileShape;
     }
 
     public int getSize() {
@@ -27,8 +29,8 @@ public class Tile {
         this.size = sizeArg;
     }
 
-    public void setOrientation(TileShape TileShapeArg) {
-        this.TileShape = TileShapeArg;
+    public void setShape(TileShape TileShapeArg) {
+        this.tileShape = TileShapeArg;
     }
 
     public Integer getID() {
@@ -45,15 +47,35 @@ public class Tile {
 
     public void rotateRandomly() {
         // Rotation only affects the el shape, and for now, it does not do anything.
-        if (TileShape == TileShape.EL_SHAPE) {
+        if (tileShape == TileShape.EL_SHAPE) {
             // TODO: Rotate this el tile
         }
     }
 
     public String toString() {
         if (id != null) {
-            return id + " " + size + " " + TileShape;
+            return id + " " + size + " " + tileShape;
         }
-        return size + " " + TileShape;
+        return size + " " + tileShape;
+    }
+
+    public boolean cover(int i, int j) {
+        if (tileShape == TileShape.FULL_BLOCK) {
+            return true;
+        }
+
+        if (tileShape == TileShape.OUTER_BOUNDARY) {
+            if ((i == 0 || i == TILE_SIZE - 1) || (j == 0 || j == TILE_SIZE - 1)) {
+                return true;
+            }
+        }
+
+        if (tileShape == TileShape.EL_SHAPE) {
+            if (i == 0 || j == 0) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

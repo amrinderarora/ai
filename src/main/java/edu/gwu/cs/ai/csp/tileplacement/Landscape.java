@@ -34,6 +34,10 @@ public class Landscape {
         }
     }
 
+    public int[][] getBushes() {
+        return bushes;
+    }
+
     private void generateOneBush(int i, int j) {
         bushes[i][j] = (int) (srandom.nextDouble() * (COLORS + 1));
     }
@@ -42,7 +46,11 @@ public class Landscape {
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < bushes.length; i++) {
             for (int j = 0; j < bushes[i].length; j++) {
-                sb.append(bushes[i][j] + CELL_SEPARATOR);
+                if (bushes[i][j] > 0) {
+                    sb.append(bushes[i][j] + CELL_SEPARATOR);
+                } else {
+                    sb.append(" " + CELL_SEPARATOR);
+                }
             }
             sb.append(LINE_SEPARATOR);
         }
