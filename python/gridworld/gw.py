@@ -1,22 +1,19 @@
 import numpy as np
-    import matplotlib.pyplot as plt
-    import random as rand
+import matplotlib.pyplot as plt
+import random as rand
 
-    class GridWorld:
+class GridWorld:
 
-        # north, east, south, west
-        directions = [
+    # north, east, south, west
+    directions = [
             (-1, 0),
             (0, 1),
             (1, 0),
             (0, -1),
-        ]
-        _num_moves = len(directions)
+    ]
+    num_moves = len(directions)
 
-        def __init__(self,
-                     prize_grid,
-                     trm_msk,
-                     wall_mask,
+    def __init__(self, prize_grid, trm_msk, wall_mask,
                      move_probs,
                      no_move_prob):
 
@@ -29,8 +26,8 @@ import numpy as np
                 wall_mask
             )
 
-        @property
-        def shape(self):
+    @property
+    def shape(self):
             return self._prize_grid.shape
 
         @property
@@ -70,11 +67,10 @@ import numpy as np
             return policy_grids, util_grids
 
         def gen_exp(self, current_state_idx, move_idx):
-            A, B= self.grid_indices_to_coords(current_state_idx)
+            A, B = self.grid_indices_to_coords(current_state_idx)
             next_state_probs = self._T[A, B, move_idx, :, :].flatten()
             next_state_idx = np.random.choice(np.arange(next_state_probs.size),
                                               p=next_state_probs)
-
 
             return (next_state_idx,
                     self._prize_grid.flatten()[next_state_idx],
@@ -122,7 +118,7 @@ import numpy as np
                     A1 = np.clip(A + dr, 0, M - 1)
                     B1 = np.clip(B + dc, 0, N - 1)
 
-#Flatten puts the array into one dimension
+# Flatten puts the array into one dimension
 
                     temp_mask = wall_mask[A1, B1].flatten()
                     A1[temp_mask] = A[temp_mask]
@@ -151,7 +147,7 @@ import numpy as np
             M, N = self.shape
 
             util_grid = (
-                self._prize_grid +
+                self._prize_grid + 
                 discount * ((util_grid.reshape((1, 1, 1, M, N)) * self._T)
                             .sum(axis=-1).sum(axis=-1))[r, c, policy_grid.flatten()]
                 .reshape(self.shape)
@@ -185,9 +181,7 @@ import numpy as np
             util_norm = (util_grid - util_grid.min()) / \
                                  (util_grid.max() - util_grid.min())
 
-            util_norm = (255*util_norm).astype(np.uint8)
-
-
+            util_norm = (255 * util_norm).astype(np.uint8)
 
             for i, marker in enumerate(markers):
                 y, x = np.where((policy_grid == i) & np.logical_not(no_move_mask))
@@ -199,14 +193,13 @@ import numpy as np
                      color=marker_fill_color)
 
             tick_step_options = np.array([1, 2, 5, 10, 20, 50, 100])
-            tick_step = np.max(policy_grid.shape)/7
+            tick_step = np.max(policy_grid.shape) / 7
             optimal_option = np.argmin(np.abs(np.log(tick_step) - np.log(tick_step_options)))
             tick_step = tick_step_options[optimal_option]
             plt.xticks(np.arange(0, policy_grid.shape[1] - 0.5, tick_step))
             plt.yticks(np.arange(0, policy_grid.shape[0] - 0.5, tick_step))
-            plt.xlim([-0.5, policy_grid.shape[0]-0.5])
-            plt.xlim([-0.5, policy_grid.shape[1]-0.5])
-
+            plt.xlim([-0.5, policy_grid.shape[0] - 0.5])
+            plt.xlim([-0.5, policy_grid.shape[1] - 0.5])
 
     class QLearn:
         '''A generic implementation of Q-Learning and Dyna-Q'''
@@ -302,7 +295,6 @@ import numpy as np
     import numpy as np
     import matplotlib.pyplot as plt
 
-
     def plot_convergence(util_grids, policy_grids):
         fig, ax1 = plt.subplots()
         ax2 = ax1.twinx()
@@ -314,28 +306,26 @@ import numpy as np
         ax2.plot(policy_changes, 'r.-')
         ax2.set_ylabel('Change in optimal Policy', color='r')
 
-
     if __name__ == '__main__':
         shape = (6, 6)
         goal_two = (3, 5)
-        goal_three = (4,5)
+        goal_three = (4, 5)
         goal = (2, 5)
         goal_one = (5, 0)
         trap = (0, 1)
-        trap_one =(1, 4)
+        trap_one = (1, 4)
         trap_two = (5, 1)
         trap_three = (5, 4)
-        trap_four = (5,5)
+        trap_four = (5, 5)
         wall = (1, 3)
-        wall_one= (2,3)
-        wall_two= (3,3)
-        wall_three= (5,3)
+        wall_one = (2, 3)
+        wall_two = (3, 3)
+        wall_three = (5, 3)
         start = (3, 1)
         default_reward = -0.1
         goal_reward = 3
         goal_one_reward = 1
         trap_reward = -1
-
 
         prize_grid = np.zeros(shape) + default_reward
         prize_grid[goal] = goal_reward
@@ -347,9 +337,6 @@ import numpy as np
         prize_grid[trap_two] = trap_reward
         prize_grid[trap_three] = trap_reward
         prize_grid[trap_four] = trap_reward
-
-
-
 
         prize_grid[wall] = 0
         prize_grid[wall_one] = 0

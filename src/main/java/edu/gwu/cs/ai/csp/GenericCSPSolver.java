@@ -11,7 +11,7 @@ public class GenericCSPSolver implements CSPSearchAlgorithm {
     public static final String NEW_LINE = "\r\n";
 
     /**
-     * Solves using the starting npuzzle using tree search (does not maintain a closed list).
+     * Solves using the starting search state using DFS tree search (does not maintain a closed list).
      * 
      * @param nPuzzle
      * @throws Exception

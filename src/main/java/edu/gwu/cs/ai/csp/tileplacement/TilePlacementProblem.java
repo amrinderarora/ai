@@ -5,7 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TilePlacementProblem {
+import edu.gwu.cs.PracticeProblem;
+
+public class TilePlacementProblem implements PracticeProblem {
 
     private Landscape landscape;
     private List<Tile> tiles = new ArrayList<>();
@@ -48,6 +50,7 @@ public class TilePlacementProblem {
         this.colorsTarget = colorsTargetArg;
     }
 
+    @Override
     public String getProblemDescription() {
         StringBuffer sb = new StringBuffer();
         sb.append("# Tiles Problem, generated at: " + new java.util.Date() + System.lineSeparator());
@@ -70,6 +73,7 @@ public class TilePlacementProblem {
         return sb.toString();
     }
 
+    @Override
     public String getSolutionKey() {
         StringBuffer sb = new StringBuffer();
         sb.append("# Tiles Problem Solution Key, generated at: " + new java.util.Date() + System.lineSeparator());
