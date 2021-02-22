@@ -3,6 +3,9 @@ package edu.gwu.cs.ai.csp.coloring;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jgrapht.Graph;
+import org.jgrapht.graph.DefaultEdge;
+
 import edu.gwu.cs.PracticeProblem;
 import edu.gwu.cs.ai.csp.CSP;
 import edu.gwu.cs.ai.csp.CSPSearchState;
@@ -39,6 +42,9 @@ public class ColoringProblem implements CSP, PracticeProblem {
         return null;
     }
 
+    public void initPlanarGraph(int n) {
+    }
+
     public void initConstraints() {
         this.constraints = new ArrayList<>();
         Constraint c1 = new ColoringConstraint(1, 2);
@@ -71,6 +77,13 @@ public class ColoringProblem implements CSP, PracticeProblem {
         sb.append(System.lineSeparator());
 
         return sb.toString();
+    }
+
+    public void initGraph(Graph<Integer, DefaultEdge> graph) {
+        this.constraints = new ArrayList<>();
+        for (DefaultEdge edge : graph.edgeSet()) {
+            constraints.add(new ColoringConstraint(graph.getEdgeSource(edge), graph.getEdgeTarget(edge)));
+        }
     }
 
 }
