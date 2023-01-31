@@ -69,7 +69,7 @@ public class SearchStatistics {
 
     @Override
     public String toString() {
-        return "SearchStatistics [totalTime in Millis= " + getElapsedTimeMillis() + ", numberOpen=" + numberOpen + ", maxOpen: " + maxOpen + ", numberClosed="
+        return "SearchStatistics [totalTime = " + getElapsedTimeMillis() + "ms, numberOpen=" + numberOpen + ", maxOpen: " + maxOpen + ", numberClosed="
                 + numberClosed
                 + ", found=" + found
                 + ", distanceToRoot=" + distanceToRoot + "]";
