@@ -19,7 +19,7 @@ public class NPuzzleSearchAlgorithm implements SearchAlgorithm {
     /**
      * Solves using the starting npuzzle using tree search (does not maintain a closed list).
      * 
-     * Ignores Strategy, and uses BFS (Deque, FIFO).
+     * Uses the strategy that is given - BFS or DFS.
      * 
      * Does not use priority queue for cost, so heuristic is for your mental satisfaction only. Please provide a good one, and please be
      * consistent, positive and optimistic.
@@ -31,37 +31,42 @@ public class NPuzzleSearchAlgorithm implements SearchAlgorithm {
     public SearchStatistics solveTreeSearch(SearchState searchState, Strategy strategy, SearchHeuristic heuristicAlgorithm) throws Exception {
 
         NPuzzle nPuzzle = (NPuzzle) searchState;
-        SearchStatistics searchStats = new SearchStatistics();
-
         if (nPuzzle.isGoalState()) {
+            SearchStatistics searchStats = new SearchStatistics();
             searchStats.setFound(true);
             return searchStats;
         }
+        
+        if (strategy == Strategy.BFS) {
+        	return solveTreeSearchBFS(searchState, heuristicAlgorithm);
+        } else if (strategy == Strategy.DFS) {
+            throw new IllegalArgumentException("Strategy not supported: " + strategy);
+        } else {
+            throw new IllegalArgumentException("Strategy not supported: " + strategy);
+        }
+    }
+    
+    private SearchStatistics solveTreeSearchBFS(SearchState searchState, SearchHeuristic heuristicAlgorithm) throws Exception {
+        NPuzzle nPuzzle = (NPuzzle) searchState;
+        SearchStatistics searchStats = new SearchStatistics();
 
         Deque<SearchState> openSet = new ArrayDeque<>();
         openSet.addLast(nPuzzle);
         searchStats.incrementOpen();
 
         searchWhile: while (!openSet.isEmpty()) {
-            NPuzzle bestNode = null;
-            if (strategy == Strategy.BFS) {
-                bestNode = (NPuzzle) openSet.removeFirst();
-            } else if (strategy == Strategy.DFS) {
-                bestNode = (NPuzzle) openSet.removeLast();
-            } else {
-                throw new IllegalArgumentException("Strategy not supported: " + strategy);
-            }
+            NPuzzle bestNode = (NPuzzle) openSet.removeFirst();
 
-            Map<SearchState, Double> successors = bestNode.getSuccessors();
+            Map<SearchState, Double> successors = bestNode.generateSuccessors();
             for (SearchState nextNode : successors.keySet()) {
                 if (!openSet.contains(nextNode)) {
                     openSet.addLast(nextNode);
                     searchStats.incrementOpen();
                     searchStats.setCurrentOpen(openSet.size());
                     if (nextNode.isGoalState()) {
-                        int distanceToRoot = ((NPuzzle) nextNode).getDistanceToRoot();
+                        double distanceToRoot = ((NPuzzle) nextNode).getDistanceFromRoot();
                         searchStats.setFound(true);
-                        searchStats.setDistanceToRoot(distanceToRoot);
+                        searchStats.setDistanceFromRoot(distanceToRoot);
                         break searchWhile;
                     }
                 }
@@ -107,16 +112,16 @@ public class NPuzzleSearchAlgorithm implements SearchAlgorithm {
             } else {
                 throw new IllegalArgumentException("Strategy not supported: " + strategy);
             }
-            Map<SearchState, Double> successors = bestNode.getSuccessors();
+            Map<SearchState, Double> successors = bestNode.generateSuccessors();
             for (SearchState nextNode : successors.keySet()) {
                 if (!closedSet.contains(nextNode) && !openSet.contains(nextNode)) {
                     openSet.addLast((NPuzzle) nextNode);
                     searchStats.incrementOpen();
                     searchStats.setCurrentOpen(openSet.size());
                     if (nextNode.isGoalState()) {
-                        int distanceToRoot = ((NPuzzle) nextNode).getDistanceToRoot();
+                        double distanceFromRoot = ((NPuzzle) nextNode).getDistanceFromRoot();
                         searchStats.setFound(true);
-                        searchStats.setDistanceToRoot(distanceToRoot);
+                        searchStats.setDistanceFromRoot(distanceFromRoot);
                         break searchWhile;
                     }
                 }

@@ -15,7 +15,7 @@ public class SearchStatistics {
 
     private boolean found = false;
 
-    private int distanceToRoot;
+    private double distanceFromRoot;
 
     private int maxOpen = 0;
 
@@ -72,7 +72,7 @@ public class SearchStatistics {
         return "SearchStatistics [totalTime = " + getElapsedTimeMillis() + "ms, numberOpen=" + numberOpen + ", maxOpen: " + maxOpen + ", numberClosed="
                 + numberClosed
                 + ", found=" + found
-                + ", distanceToRoot=" + distanceToRoot + "]";
+                + ", distanceFromRoot=" + distanceFromRoot + "]";
     }
 
     /**
@@ -97,12 +97,12 @@ public class SearchStatistics {
         finishTime = null;
     }
 
-    public int getDistanceToRoot() {
-        return distanceToRoot;
+    public double getDistanceFromRoot() {
+        return distanceFromRoot;
     }
 
-    public void setDistanceToRoot(int distanceToRootArg) {
-        this.distanceToRoot = distanceToRootArg;
+    public void setDistanceFromRoot(double distArg) {
+        this.distanceFromRoot = distArg;
     }
 
     public void setCurrentOpen(int size) {

@@ -1,7 +1,9 @@
 package edu.gwu.cs.ai.search.npuzzle;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import edu.gwu.cs.ai.search.SearchState;
@@ -14,17 +16,20 @@ import edu.gwu.cs.ai.search.SearchState;
  */
 public class NPuzzle implements Cloneable, SearchState {
     private static final String NEW_LINE = System.getProperty("line.separator");
-    private int side = 4;
-    private static final int ZERO = 0;
+    private int size = 4;
+	private static final int ZERO = 0;
     private int[][] stateMatrix;
     private int blankRow;
     private int blankCol;
-
+    
+    // navigation/search related properties
+    // Level/Distance from root (root is at level/distance 0)
+    private double distanceFromRoot = 0;
+    private List<SearchState> successors;
+    private int currSucessorIndex;
     private Direction lastDirection;
-    private NPuzzle previous;
 
-
-    @Override
+	@Override
     public int hashCode() {
         return Arrays.deepHashCode(stateMatrix);
     }
@@ -45,25 +50,26 @@ public class NPuzzle implements Cloneable, SearchState {
 
     /** Creates an instance of n-puzzle. By default, it is solved. */
     public NPuzzle(int sideArg) {
-        this.side = sideArg;
-        stateMatrix = new int[side][side];
+        this.size = sideArg;
+        stateMatrix = new int[size][size];
 
         int counter = 1;
-        for (int i = 0; i < side; i++) {
-            for (int j = 0; j < side; j++) {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
                 stateMatrix[i][j] = counter++;
             }
         }
-        stateMatrix[side - 1][side - 1] = 0; // Bottom Right is the blank
-        setBlank(side - 1, side - 1); // Bottom Right is the blank
+        stateMatrix[size - 1][size - 1] = 0; // Bottom Right is the blank
+        setBlank(size - 1, size - 1); // Bottom Right is the blank
     }
 
+    /** Creates an instance of n-puzzle by copying the given one dimensional array.*/
     public NPuzzle(int[] stateArray) {
-        this.side = (int) Math.sqrt(stateArray.length);
-        stateMatrix = new int[side][side];
+        this.size = (int) Math.sqrt(stateArray.length);
+        stateMatrix = new int[size][size];
         int counter = 0;
-        for (int i = 0; i < side; i++) {
-            for (int j = 0; j < side; j++) {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
                 if (stateArray[counter] == 0) {
                     blankRow = i;
                     blankCol = j;
@@ -81,8 +87,8 @@ public class NPuzzle implements Cloneable, SearchState {
 
     public String getPrintVersion() {
         StringBuffer sb = new StringBuffer();
-        for (int row = 0; row < side; row++) {
-            for (int col = 0; col < side; col++) {
+        for (int row = 0; row < size; row++) {
+            for (int col = 0; col < size; col++) {
                 if (stateMatrix[row][col] == 0) {
                     sb.append("    ");
                 } else {
@@ -129,16 +135,15 @@ public class NPuzzle implements Cloneable, SearchState {
             nPuzzleNewState.setBlank(blankRow, blankCol + 1);
         }
         nPuzzleNewState.lastDirection = direction;
-        nPuzzleNewState.setPrevious(this);
         return nPuzzleNewState;
     }
 
     @Override
     public NPuzzle clone() throws CloneNotSupportedException {
         NPuzzle np2 = (NPuzzle) super.clone();
-        np2.stateMatrix = new int[side][side];
-        for (int i = 0; i < side; i++) {
-            for (int j = 0; j < side; j++) {
+        np2.stateMatrix = new int[size][size];
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
                 np2.stateMatrix[i][j] = this.stateMatrix[i][j];
             }
         }
@@ -148,13 +153,22 @@ public class NPuzzle implements Cloneable, SearchState {
 
     public boolean movePossible(Direction direction) {
         if (blankRow == 0 && direction == Direction.UP
-                || blankRow == side - 1 && direction == Direction.DOWN
+                || blankRow == size - 1 && direction == Direction.DOWN
                 || blankCol == 0 && direction == Direction.LEFT
-                || blankCol == side - 1 && direction == Direction.RIGHT) {
+                || blankCol == size - 1 && direction == Direction.RIGHT) {
             return false;
         }
         return true;
     }
+
+    public int getSize() {
+		return size;
+	}
+
+	public void setSize(int size) {
+		this.size = size;
+	}
+
 
     public int getState(int i, int j) {
         return stateMatrix[i][j];
@@ -164,36 +178,39 @@ public class NPuzzle implements Cloneable, SearchState {
         return lastDirection;
     }
 
-    public NPuzzle getPrevious() {
-        return previous;
-    }
+    public double getDistanceFromRoot() {
+		return distanceFromRoot;
+	}
 
-    public void setPrevious(NPuzzle prevArg) {
-        this.previous = prevArg;
-    }
+	public void setDistanceFromRoot(double distFromRoot) {
+		this.distanceFromRoot = distFromRoot;
+	}
 
-    public int getDistanceToRoot() {
-        int dist = 0;
-        NPuzzle curr = this;
-        while (curr.previous != null) {
-            curr = curr.previous;
-            dist++;
-        }
-        return dist;
-    }
+	public int getCurrSucessorIndex() {
+		return currSucessorIndex;
+	}
 
-    public int getSize() {
-        return this.side;
-    }
+	public void setCurrSucessorIndex(int currSucessorIndex) {
+		this.currSucessorIndex = currSucessorIndex;
+	}
+
+	public List<SearchState> getSuccessors() {
+		return this.successors;
+	}
+	
+	public void setSuccessors(List<SearchState> successors) {
+		this.successors = successors;
+	}
+
 
     @Override
     public boolean isGoalState() {
         int counter = 1;
         // Just traverses left to right, and then top to down and matches that to the counter
-        for (int i = 0; i < side; i++) {
-            for (int j = 0; j < side; j++) {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
                 // This is for the blank
-                if (i == side - 1 & j == side - 1) {
+                if (i == size - 1 & j == size - 1) {
                     continue;
                 }
                 if (this.stateMatrix[i][j] != counter++) {
@@ -205,14 +222,17 @@ public class NPuzzle implements Cloneable, SearchState {
     }
 
     @Override
-    public Map<SearchState, Double> getSuccessors() {
-        Map<SearchState, Double> successors = new HashMap<>();
+    public Map<SearchState, Double> generateSuccessors() {
+    	this.successors = new ArrayList<>();
+        Map<SearchState, Double> successorsMap = new HashMap<>();
         for (Direction dir : Direction.getAllDirections()) {
             if (this.movePossible(dir)) {
                 NPuzzle nextState = this.moveBlank(dir);
-                successors.put(nextState, 1.0d);
+                nextState.setDistanceFromRoot(this.distanceFromRoot + 1.0d);
+                successorsMap.put(nextState, 1.0d);
+                this.successors.add(nextState);
             }
         }
-        return successors;
+        return successorsMap;
     }
 }

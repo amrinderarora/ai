@@ -6,5 +6,5 @@ public interface SearchState {
 
     boolean isGoalState();
 
-    Map<SearchState, Double> getSuccessors();
+    Map<SearchState, Double> generateSuccessors();
 }

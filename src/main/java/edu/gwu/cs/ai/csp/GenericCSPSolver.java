@@ -44,9 +44,9 @@ public class GenericCSPSolver implements CSPSearchAlgorithm {
                     searchStats.incrementOpen();
                     searchStats.setCurrentOpen(openSet.size());
                     if (nextNode.isFullyAssigned()) {
-                        int distanceToRoot = 0;
+                        double distFromRoot = 0;
                         searchStats.setFound(true);
-                        searchStats.setDistanceToRoot(distanceToRoot);
+                        searchStats.setDistanceFromRoot(distFromRoot);
                         break searchWhile;
                     }
                 }

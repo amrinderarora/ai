@@ -13,7 +13,7 @@ public class Main {
 	private static Logger lg = Logger.getLogger("abc");
 	
 	public static void main(String[] args) throws Exception {
-		for (int targetMoveCount = 6; targetMoveCount <= 15; targetMoveCount++) {
+		for (int targetMoveCount = 15; targetMoveCount <= 20; targetMoveCount++) {
 			generateAndSolve(targetMoveCount);
 		}
 	}
@@ -28,9 +28,8 @@ public class Main {
 		System.out.println("================");
 		System.out.println("targetMoveCount: " + targetMoveCount + ", puzzle:\r\n" + nPuzzle.getPrintVersion());
 
-		// We set this puzzle as the "root"
-		// Ensures the algorithm cannot find "home" just by following the previous links. :-)
-		nPuzzle.setPrevious(null);
+		// Set this puzzle as the "root"
+		nPuzzle.setDistanceFromRoot(0);
 
 		SearchAlgorithm nPuzzleSearchAlgorithm = new NPuzzleSearchAlgorithm();
 		SearchHeuristic heuristicAlgorithm = new ZeroHeuristic();
@@ -40,11 +39,17 @@ public class Main {
 
 		SearchStatistics searchStatsTreeBfs = nPuzzleSearchAlgorithm.solveTreeSearch(nPuzzle, Strategy.BFS, heuristicAlgorithm);
 		System.out.println("TreeSearchResults BFS: " + searchStatsTreeBfs);
+		if (searchStatsTreeBfs.getDistanceFromRoot() > targetMoveCount) {
+			System.err.println("Error: expected distance: " + targetMoveCount + ", found: " + searchStatsTreeBfs.getDistanceFromRoot());
+		}
 
 //		SearchStatistics searchStatsGraphDfs = nPuzzleSearchAlgorithm.solveGraphSearch(nPuzzle, Strategy.DFS, heuristicAlgorithm);
 //		System.out.println("GraphSearchResults DFS: " + searchStatsGraphDfs);
 
 		SearchStatistics searchStatsGraphBfs = nPuzzleSearchAlgorithm.solveGraphSearch(nPuzzle, Strategy.BFS, heuristicAlgorithm);
 		System.out.println("GraphSearchResults BFS: " + searchStatsGraphBfs);
+		if (searchStatsGraphBfs.getDistanceFromRoot() > targetMoveCount) {
+			System.err.println("Error: expected distance: " + targetMoveCount + ", found: " + searchStatsGraphBfs.getDistanceFromRoot());
+		}
 	}
 }
