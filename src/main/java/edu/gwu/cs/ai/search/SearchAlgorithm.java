@@ -18,7 +18,7 @@ public interface SearchAlgorithm {
      * @param searchState
      * @throws Exception
      */
-    SearchStatistics solveTreeSearch(SearchState searchState, Strategy strategy, SearchHeuristic heuristicAlgorithm) throws Exception;
+    SearchStatistics solveTreeSearch(SearchState searchState, Strategy strategy, SearchHeuristic heuristicAlgorithm, double maxSearchDepth) throws Exception;
 
     /**
      * Solves using the starting npuzzle using graph search (maintains a closed list).

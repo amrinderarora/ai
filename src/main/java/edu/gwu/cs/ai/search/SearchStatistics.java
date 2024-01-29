@@ -7,9 +7,13 @@ package edu.gwu.cs.ai.search;
  */
 public class SearchStatistics {
 
-    private static final int LARGE_BASE = 1000000;
+    private static final int LARGE_BASE = 1000;
 
-    private int numberOpen = 0;
+    // The number of nodes currently in open stage
+    private int currentOpen = 0;
+    
+    // The number of nodes that were opened (maybe not simultaneously)
+    private int totalOpen = 0;
 
     private int numberClosed = 0;
 
@@ -23,14 +27,18 @@ public class SearchStatistics {
 
     private long startTime;
 
+	private double currentDistanceFromRoot = 0;
+
+	private double maxDistanceFromRoot = 0;
+
     public SearchStatistics() {
         startTimer();
     }
 
     public void incrementOpen() {
-        numberOpen++;
-        if (numberOpen % LARGE_BASE == 0) {
-            System.out.println("number Open: " + numberOpen);
+        totalOpen++;
+        if (totalOpen % LARGE_BASE == 0) {
+            System.out.println("total open: " + totalOpen);
         }
     }
 
@@ -43,14 +51,14 @@ public class SearchStatistics {
     }
 
     public int getTotalOpen() {
-        return numberOpen;
+        return totalOpen;
     }
 
 
     public void setTotalOpen(int totalOpenArg) {
-        this.numberOpen = totalOpenArg;
+        this.totalOpen = totalOpenArg;
     }
-
+    
     public int getTotalClosed() {
         return numberClosed;
     }
@@ -69,7 +77,7 @@ public class SearchStatistics {
 
     @Override
     public String toString() {
-        return "SearchStatistics [totalTime = " + getElapsedTimeMillis() + "ms, numberOpen=" + numberOpen + ", maxOpen: " + maxOpen + ", numberClosed="
+        return "SearchStatistics [totalTime = " + getElapsedTimeMillis() + "ms, numberOpen=" + totalOpen + ", maxOpen: " + maxOpen + ", numberClosed="
                 + numberClosed
                 + ", found=" + found
                 + ", distanceFromRoot=" + distanceFromRoot + "]";
@@ -106,8 +114,19 @@ public class SearchStatistics {
     }
 
     public void setCurrentOpen(int size) {
-        if (size > maxOpen) {
-            maxOpen = size;
-        }
+    	this.currentOpen = size;
+    	if (this.currentOpen > this.maxOpen) {
+    		this.maxOpen = this.currentOpen;
+    	}
     }
+
+	public void setCurrentDistance(double distanceFromRoot) {
+		this.currentDistanceFromRoot = distanceFromRoot;
+		if (this.currentDistanceFromRoot > this.maxDistanceFromRoot) {
+			this.maxDistanceFromRoot = this.currentDistanceFromRoot;
+		}
+        if (maxDistanceFromRoot % LARGE_BASE == 0) {
+            System.out.println("maxDistanceFromRoot: " + maxDistanceFromRoot + ", currentOpen: " + this.currentOpen);
+        }
+	}
 }

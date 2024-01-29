@@ -9,7 +9,7 @@ import java.util.Map;
 import edu.gwu.cs.ai.search.SearchState;
 
 /**
- * Models the state of the n-puzzle.
+ * Models the search state of the n-puzzle.
  * There are no algorithms or solvers here.
  * 
  * @author amrinder
@@ -224,6 +224,7 @@ public class NPuzzle implements Cloneable, SearchState {
     @Override
     public Map<SearchState, Double> generateSuccessors() {
     	this.successors = new ArrayList<>();
+    	this.setCurrSucessorIndex(0);
         Map<SearchState, Double> successorsMap = new HashMap<>();
         for (Direction dir : Direction.getAllDirections()) {
             if (this.movePossible(dir)) {

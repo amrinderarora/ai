@@ -11,9 +11,9 @@ import edu.gwu.cs.ai.search.ZeroHeuristic;
 public class Main {
 
 	private static Logger lg = Logger.getLogger("abc");
-	
+
 	public static void main(String[] args) throws Exception {
-		for (int targetMoveCount = 15; targetMoveCount <= 20; targetMoveCount++) {
+		for (int targetMoveCount = 10; targetMoveCount <= 15; targetMoveCount++) {
 			generateAndSolve(targetMoveCount);
 		}
 	}
@@ -34,22 +34,35 @@ public class Main {
 		SearchAlgorithm nPuzzleSearchAlgorithm = new NPuzzleSearchAlgorithm();
 		SearchHeuristic heuristicAlgorithm = new ZeroHeuristic();
 
-//		SearchStatistics searchStatsTreeDfs = nPuzzleSearchAlgorithm.solveTreeSearch(nPuzzle, Strategy.DFS, heuristicAlgorithm);
-//		System.out.println("TreeSearchResults: " + searchStatsTreeDfs);
-
-		SearchStatistics searchStatsTreeBfs = nPuzzleSearchAlgorithm.solveTreeSearch(nPuzzle, Strategy.BFS, heuristicAlgorithm);
-		System.out.println("TreeSearchResults BFS: " + searchStatsTreeBfs);
-		if (searchStatsTreeBfs.getDistanceFromRoot() > targetMoveCount) {
-			System.err.println("Error: expected distance: " + targetMoveCount + ", found: " + searchStatsTreeBfs.getDistanceFromRoot());
+		{
+			int maxSearchDepth = 20;
+			SearchStatistics searchStatsTreeDfs = nPuzzleSearchAlgorithm.solveTreeSearch(nPuzzle, Strategy.DFS,
+					heuristicAlgorithm, maxSearchDepth);
+			System.out.println("TreeSearchResults DFS: " + searchStatsTreeDfs);
+			if (searchStatsTreeDfs.getDistanceFromRoot() > targetMoveCount) {
+				System.err.println("Error: expected distance: " + targetMoveCount + ", found: "
+						+ searchStatsTreeDfs.getDistanceFromRoot());
+			}
 		}
 
-//		SearchStatistics searchStatsGraphDfs = nPuzzleSearchAlgorithm.solveGraphSearch(nPuzzle, Strategy.DFS, heuristicAlgorithm);
-//		System.out.println("GraphSearchResults DFS: " + searchStatsGraphDfs);
+		{
+			SearchStatistics searchStatsTreeBfs = nPuzzleSearchAlgorithm.solveTreeSearch(nPuzzle, Strategy.BFS,
+					heuristicAlgorithm, Double.POSITIVE_INFINITY);
+			System.out.println("TreeSearchResults BFS: " + searchStatsTreeBfs);
+			if (searchStatsTreeBfs.getDistanceFromRoot() > targetMoveCount) {
+				System.err.println("Error: expected distance: " + targetMoveCount + ", found: "
+						+ searchStatsTreeBfs.getDistanceFromRoot());
+			}
+		}
 
-		SearchStatistics searchStatsGraphBfs = nPuzzleSearchAlgorithm.solveGraphSearch(nPuzzle, Strategy.BFS, heuristicAlgorithm);
-		System.out.println("GraphSearchResults BFS: " + searchStatsGraphBfs);
-		if (searchStatsGraphBfs.getDistanceFromRoot() > targetMoveCount) {
-			System.err.println("Error: expected distance: " + targetMoveCount + ", found: " + searchStatsGraphBfs.getDistanceFromRoot());
+		{
+			SearchStatistics searchStatsGraphBfs = nPuzzleSearchAlgorithm.solveGraphSearch(nPuzzle, Strategy.BFS,
+					heuristicAlgorithm);
+			System.out.println("GraphSearchResults BFS: " + searchStatsGraphBfs);
+			if (searchStatsGraphBfs.getDistanceFromRoot() > targetMoveCount) {
+				System.err.println("Error: expected distance: " + targetMoveCount + ", found: "
+						+ searchStatsGraphBfs.getDistanceFromRoot());
+			}
 		}
 	}
 }
