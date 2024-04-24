@@ -9,6 +9,11 @@ import edu.gwu.cs.ai.csp.CSPSearchState;
 import edu.gwu.cs.ai.csp.DomainValue;
 import edu.gwu.cs.ai.csp.Variable;
 
+/** 
+ * Models the CSP Search State or the Graph Coloring problem.
+ * 
+ * @author Amrinder Arora
+ */
 public class ColoringState extends CSPSearchState
 {
 

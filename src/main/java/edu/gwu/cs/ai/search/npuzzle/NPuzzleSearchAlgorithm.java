@@ -1,9 +1,11 @@
 package edu.gwu.cs.ai.search.npuzzle;
 
 import java.util.ArrayDeque;
+import java.util.Comparator;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.Set;
 
 import edu.gwu.cs.ai.search.SearchAlgorithm;
@@ -33,23 +35,63 @@ public class NPuzzleSearchAlgorithm implements SearchAlgorithm {
 	public SearchStatistics solveTreeSearch(SearchState searchState, Strategy strategy,
 			SearchHeuristic heuristicAlgorithm, double maxSearchDepth) throws Exception {
 
-		NPuzzle nPuzzle = (NPuzzle) searchState;
-		if (nPuzzle.isGoalState()) {
+		if (searchState.isGoalState()) {
 			SearchStatistics searchStats = new SearchStatistics();
 			searchStats.setFound(true);
 			return searchStats;
 		}
 
-		if (strategy == Strategy.BFS) {
-			return solveTreeSearchBFS(searchState, heuristicAlgorithm);
+		if (strategy == Strategy.ASTAR) {
+			return solveTreeSearchAstar(searchState, heuristicAlgorithm);
+		} else if (strategy == Strategy.BFS) {
+			return solveTreeSearchBFS(searchState);
 		} else if (strategy == Strategy.DFS) {
-			return solveTreeSearchDFS(searchState, heuristicAlgorithm, maxSearchDepth);
+			return solveTreeSearchDFS(searchState, maxSearchDepth);
 		} else {
 			throw new IllegalArgumentException("Strategy not supported: " + strategy);
 		}
 	}
 
-	private SearchStatistics solveTreeSearchBFS(SearchState searchState, SearchHeuristic heuristicAlgorithm)
+	private SearchStatistics solveTreeSearchAstar(SearchState searchState, SearchHeuristic heuristicAlgorithm)
+			throws Exception {
+		NPuzzle nPuzzle = (NPuzzle) searchState;
+		SearchStatistics searchStats = new SearchStatistics();
+
+		Comparator<SearchState> searchStateComparator = new Comparator<SearchState>() {
+			public int compare(SearchState ss1, SearchState ss2) {
+				// f = g + h, that is, f = backward cost + forward cost
+				double f1 = ss1.getDistanceFromRoot() + heuristicAlgorithm.evaluate(ss1);
+				double f2 = ss2.getDistanceFromRoot() + heuristicAlgorithm.evaluate(ss2);
+		        return Double.compare(f1, f2);
+		    }
+		};
+		PriorityQueue<SearchState> openSet = new PriorityQueue<>(searchStateComparator);
+		openSet.add(nPuzzle);
+		searchStats.incrementOpen();
+
+		searchWhile: while (!openSet.isEmpty()) {
+			NPuzzle bestNode = (NPuzzle) openSet.poll(); // The lost f value
+
+			Map<SearchState, Double> successors = bestNode.generateSuccessors();
+			for (SearchState nextNode : successors.keySet()) {
+				if (!openSet.contains(nextNode)) {
+					openSet.offer(nextNode); // add to priority queue, let it take care of it.
+					searchStats.incrementOpen();
+					searchStats.setCurrentOpen(openSet.size());
+					if (nextNode.isGoalState()) {
+						double distanceToRoot = ((NPuzzle) nextNode).getDistanceFromRoot();
+						searchStats.setFound(true);
+						searchStats.setDistanceFromRoot(distanceToRoot);
+						break searchWhile;
+					}
+				}
+			}
+		}
+		searchStats.stopTimer();
+		return searchStats;
+	}
+
+	private SearchStatistics solveTreeSearchBFS(SearchState searchState)
 			throws Exception {
 		NPuzzle nPuzzle = (NPuzzle) searchState;
 		SearchStatistics searchStats = new SearchStatistics();
@@ -80,8 +122,8 @@ public class NPuzzleSearchAlgorithm implements SearchAlgorithm {
 		return searchStats;
 	}
 
-	private SearchStatistics solveTreeSearchDFS(SearchState searchState, SearchHeuristic heuristicAlgorithm, double maxSearchDepth)
-			throws Exception {
+	private SearchStatistics solveTreeSearchDFS(SearchState searchState,
+			double maxSearchDepth) throws Exception {
 		SearchStatistics searchStats = new SearchStatistics();
 
 		NPuzzle nPuzzle = (NPuzzle) searchState;
@@ -103,8 +145,8 @@ public class NPuzzleSearchAlgorithm implements SearchAlgorithm {
 //            System.out.println("Currently exploring: ");
 //            System.out.println(bestNode.getPrintVersion());
 //            Thread.sleep(1000);
-			if ((bestNode.getCurrSucessorIndex() < bestNode.getSuccessors().size()) && 
-					(bestNode.getDistanceFromRoot() <= maxSearchDepth)) {
+			if ((bestNode.getCurrSucessorIndex() < bestNode.getSuccessors().size())
+					&& (bestNode.getDistanceFromRoot() <= maxSearchDepth)) {
 				NPuzzle childNode = (NPuzzle) bestNode.getSuccessors().get(bestNode.getCurrSucessorIndex());
 				if (childNode.isGoalState()) {
 					double distanceFromRoot = childNode.getDistanceFromRoot();
@@ -113,8 +155,10 @@ public class NPuzzleSearchAlgorithm implements SearchAlgorithm {
 					break searchWhileLoopLabel;
 				}
 
-				// If the open set contains the child node, then we simply skip it and continue the exploration of the current node
-				// If the open set does not contain child node, then we add it, and start its exploration
+				// If the open set contains the child node, then we simply skip it and continue
+				// the exploration of the current node
+				// If the open set does not contain child node, then we add it, and start its
+				// exploration
 				if (openSet.contains(childNode)) {
 					bestNode.setCurrSucessorIndex(bestNode.getCurrSucessorIndex() + 1);
 				} else {

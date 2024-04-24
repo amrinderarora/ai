@@ -8,6 +8,11 @@ import edu.gwu.cs.ai.csp.CSPSearchState;
 import edu.gwu.cs.ai.csp.Constraint;
 import edu.gwu.cs.ai.csp.Variable;
 
+/**
+ * Models a coloring constraint in a graph.
+ * 
+ * @author Amrinder Arora
+ */
 public class ColoringConstraint implements Constraint {
 
     private int endPoint1;
@@ -34,7 +39,23 @@ public class ColoringConstraint implements Constraint {
         return map;
     }
 
-    @Override
+    public int getEndPoint1() {
+		return endPoint1;
+	}
+
+	public void setEndPoint1(int endPoint1) {
+		this.endPoint1 = endPoint1;
+	}
+
+	public int getEndPoint2() {
+		return endPoint2;
+	}
+
+	public void setEndPoint2(int endPoint2) {
+		this.endPoint2 = endPoint2;
+	}
+
+	@Override
     public String toString() {
         return endPoint1 + "," + endPoint2;
     }

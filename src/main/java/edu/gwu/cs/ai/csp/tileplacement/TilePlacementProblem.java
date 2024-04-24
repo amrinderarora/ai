@@ -1,13 +1,18 @@
 package edu.gwu.cs.ai.csp.tileplacement;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import edu.gwu.cs.PracticeProblem;
+import edu.gwu.cs.ai.csp.CSP;
+import edu.gwu.cs.ai.csp.CSPSearchState;
+import edu.gwu.cs.ai.csp.Constraint;
+import edu.gwu.cs.ai.csp.Variable;
 
-public class TilePlacementProblem implements PracticeProblem {
+public class TilePlacementProblem implements CSP, PracticeProblem {
 
     private Landscape landscape;
     private List<Tile> tiles = new ArrayList<>();
@@ -86,6 +91,29 @@ public class TilePlacementProblem implements PracticeProblem {
 
         return sb.toString();
     }
+
+	@Override
+	public Collection<Variable> getVariables() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Collection<Constraint> getConstraints() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isGoalState() {
+		return false;
+	}
+
+	@Override
+	public CSPSearchState getInitialState() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }
 

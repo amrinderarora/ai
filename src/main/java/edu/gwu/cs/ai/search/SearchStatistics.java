@@ -7,7 +7,7 @@ package edu.gwu.cs.ai.search;
  */
 public class SearchStatistics {
 
-    private static final int LARGE_BASE = 1000;
+    private static final int LARGE_BASE = 10000;
 
     // The number of nodes currently in open stage
     private int currentOpen = 0;

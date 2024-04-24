@@ -7,5 +7,6 @@ public interface SearchState {
     boolean isGoalState();
 
     Map<SearchState, Double> generateSuccessors();
-    
+   
+    double getDistanceFromRoot();
 }
