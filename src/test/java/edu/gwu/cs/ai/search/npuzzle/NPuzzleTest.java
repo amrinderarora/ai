@@ -29,8 +29,9 @@ public class NPuzzleTest {
         int[] stateArray = { 1, 2, 3, 4, 5, 6, 0, 7, 8 };
 
         NPuzzle currentState = new NPuzzle(stateArray);
-        currentState.moveBlank(Direction.RIGHT);
-        currentState.moveBlank(Direction.RIGHT);
+        currentState = currentState.moveBlank(Direction.RIGHT);
+        currentState = currentState.moveBlank(Direction.RIGHT);
+        System.out.println("currentState: " + currentState.getPrintVersion());
         Assert.assertTrue(currentState.isGoalState());
     }
 }

@@ -101,7 +101,8 @@ public class NPuzzle implements Cloneable, SearchState {
     }
 
     /**
-     * Moves the BLANK in the specified direction.
+     * Moves the BLANK in the specified direction, and returns the NEW state.
+     * The original state is not modified.
      * 
      * @return
      * 
