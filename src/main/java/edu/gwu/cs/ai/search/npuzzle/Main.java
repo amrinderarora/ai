@@ -1,5 +1,9 @@
 package edu.gwu.cs.ai.search.npuzzle;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import edu.gwu.cs.ai.core.ProblemSolutionPerformance;
 import edu.gwu.cs.ai.search.SearchAlgorithm;
 import edu.gwu.cs.ai.search.SearchHeuristic;
 import edu.gwu.cs.ai.search.SearchStatistics;
@@ -9,9 +13,17 @@ public class Main {
 
 	// private static Logger lg = Logger.getLogger("abc");
 
+	private static List<ProblemSolutionPerformance> pspList = new ArrayList<>();
+
+
 	public static void main(String[] args) throws Exception {
 		for (int targetMoveCount = 25; targetMoveCount <= 28; targetMoveCount++) {
 			generateAndSolve(targetMoveCount);
+		}
+		
+		// Prints the complete set of results
+		for (ProblemSolutionPerformance psp: pspList) {
+			System.err.println(psp.toString());
 		}
 	}
 
@@ -20,7 +32,7 @@ public class Main {
 	 * @throws Exception
 	 */
 	public static void generateAndSolve(int targetMoveCount) throws Exception {
-		int puzzleSize = 5; // 3 --> 8 Puzzle, 4 --> 15 Puzzle
+		int puzzleSize = 5; // 3 --> 8 Puzzle, 4 --> 15 Puzzle, 5 --> 24 puzzle, 6 --> 35 puzzle, etc.
 		NPuzzle nPuzzle = new NPuzzleGenerator().generate(puzzleSize, targetMoveCount);
 		System.out.println("================");
 		System.out.println("targetMoveCount: " + targetMoveCount + ", puzzle:\r\n" + nPuzzle.getPrintVersion());
@@ -29,7 +41,7 @@ public class Main {
 		nPuzzle.setDistanceFromRoot(0);
 
 		SearchAlgorithm nPuzzleSearchAlgorithm = new NPuzzleSearchAlgorithm();
-
+		
 		{/*
 			System.err.println("Starting Tree DFS");
 			SearchHeuristic heuristicAlgorithm = null;
@@ -70,6 +82,8 @@ public class Main {
 				System.err.println("Error: expected distance: " + targetMoveCount + ", found: "
 						+ searchStatsTreeAstarTiles.getDistanceFromRoot());
 			}
+			pspList.add(new ProblemSolutionPerformance("" + nPuzzle.getSize() + ":" + targetMoveCount,
+						Strategy.ASTAR + ":" + heuristicAlgorithm.toString(),searchStatsTreeAstarTiles.toString()));
 		}
 
 		{
@@ -82,6 +96,8 @@ public class Main {
 				System.err.println("Error: expected distance: " + targetMoveCount + ", found: "
 						+ searchStatsTreeAstarManhattan.getDistanceFromRoot());
 			}
+			pspList.add(new ProblemSolutionPerformance("" + nPuzzle.getSize() + ":" + targetMoveCount,
+					Strategy.ASTAR + ":" + heuristicAlgorithm.toString(),searchStatsTreeAstarManhattan.toString()));
 		}
 
 		{ /*

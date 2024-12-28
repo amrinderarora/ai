@@ -22,10 +22,10 @@ public class NPuzzleSearchAlgorithm implements SearchAlgorithm {
 	 * Solves using the starting npuzzle using tree search (does not maintain a
 	 * closed list).
 	 * 
-	 * Uses the strategy that is given - BFS or DFS.
+	 * Uses the strategy that is given - BFS, DFS or AStar.
 	 * 
-	 * Does not use priority queue for cost, so heuristic is for your mental
-	 * satisfaction only. Please provide a good one, and please be consistent,
+	 * In case of AStar, uses a priority queue for cost. 
+	 * Regarding the heuristic, please provide a good one, and please be consistent,
 	 * positive and optimistic.
 	 * 
 	 * @param nPuzzle
