@@ -1,6 +1,5 @@
 package edu.gwu.cs.ai.csp.coloring;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
