@@ -17,8 +17,9 @@ public class Main {
 
 
 	public static void main(String[] args) throws Exception {
-		for (int targetMoveCount = 25; targetMoveCount <= 28; targetMoveCount++) {
-			generateAndSolve(targetMoveCount);
+		int puzzleSize = 4; // 3 --> 8 Puzzle, 4 --> 15 Puzzle, 5 --> 24 puzzle, 6 --> 35 puzzle, etc.
+		for (int targetMoveCount = 15; targetMoveCount <= 17; targetMoveCount++) {
+			generateAndSolve(puzzleSize, targetMoveCount);
 		}
 		
 		// Prints the complete set of results
@@ -31,8 +32,7 @@ public class Main {
 	 * @param args
 	 * @throws Exception
 	 */
-	public static void generateAndSolve(int targetMoveCount) throws Exception {
-		int puzzleSize = 5; // 3 --> 8 Puzzle, 4 --> 15 Puzzle, 5 --> 24 puzzle, 6 --> 35 puzzle, etc.
+	public static void generateAndSolve(int puzzleSize, int targetMoveCount) throws Exception {
 		NPuzzle nPuzzle = new NPuzzleGenerator().generate(puzzleSize, targetMoveCount);
 		System.out.println("================");
 		System.out.println("targetMoveCount: " + targetMoveCount + ", puzzle:\r\n" + nPuzzle.getPrintVersion());
@@ -42,25 +42,37 @@ public class Main {
 
 		SearchAlgorithm nPuzzleSearchAlgorithm = new NPuzzleSearchAlgorithm();
 		
-		{/*
+		{
 			System.err.println("Starting Tree DFS");
 			SearchHeuristic heuristicAlgorithm = null;
-			int maxSearchDepth = 0;
+			int maxSearchDepth = 1;
 			boolean found = false;
-			while (maxSearchDepth < 10 && !found) {
-				SearchStatistics searchStatsTreeDfs = nPuzzleSearchAlgorithm.solveTreeSearch(nPuzzle, Strategy.DFS,
+			SearchStatistics searchStatsTreeDfs = null;
+			while (maxSearchDepth < 1000 && !found) {
+				System.err.println("TreeSearch, starting DFS: " + maxSearchDepth);
+
+				searchStatsTreeDfs = nPuzzleSearchAlgorithm.solveTreeSearch(nPuzzle.clone(), Strategy.DFS,
 						heuristicAlgorithm, maxSearchDepth);
 				found = searchStatsTreeDfs.isFound();
-				System.out.println("TreeSearchResults DFS: " + searchStatsTreeDfs);
+				if (found) {
+					System.out.println("TreeSearchResults DFS: " + searchStatsTreeDfs);
+				}
 				if (searchStatsTreeDfs.getDistanceFromRoot() > targetMoveCount) {
 					System.err.println("Error: expected distance: " + targetMoveCount + ", found: "
 							+ searchStatsTreeDfs.getDistanceFromRoot());
 				}
 				maxSearchDepth++;
-			} */
+				
+//				Runtime runtime = Runtime.getRuntime();
+//				System.out.println("RuntimeStats:\r\nUsed memory: " + (runtime.totalMemory() - runtime.freeMemory()) / (1024 * 1024) + " MB");
+//				try {Thread.sleep(2000);} catch (Exception ignored) {}
+//				System.out.flush();
+			} 
+			pspList.add(new ProblemSolutionPerformance(nPuzzle.getSize() + ":" + targetMoveCount,
+					Strategy.DFS.toString(),searchStatsTreeDfs.toString()));
 		}
 
-		{ /*
+		{ 
 			System.err.println("Starting Tree BFS");
 			SearchHeuristic heuristicAlgorithm = null;
 			SearchStatistics searchStatsTreeBfs = nPuzzleSearchAlgorithm.solveTreeSearch(nPuzzle, Strategy.BFS,
@@ -69,7 +81,9 @@ public class Main {
 			if (searchStatsTreeBfs.getDistanceFromRoot() > targetMoveCount) {
 				System.err.println("Error: expected distance: " + targetMoveCount + ", found: "
 						+ searchStatsTreeBfs.getDistanceFromRoot());
-			} */
+			} 
+			pspList.add(new ProblemSolutionPerformance(nPuzzle.getSize() + ":" + targetMoveCount,
+					Strategy.BFS.toString(),searchStatsTreeBfs.toString()));
 		}
 
 		{
@@ -82,11 +96,11 @@ public class Main {
 				System.err.println("Error: expected distance: " + targetMoveCount + ", found: "
 						+ searchStatsTreeAstarTiles.getDistanceFromRoot());
 			}
-			pspList.add(new ProblemSolutionPerformance("" + nPuzzle.getSize() + ":" + targetMoveCount,
+			pspList.add(new ProblemSolutionPerformance(nPuzzle.getSize() + ":" + targetMoveCount,
 						Strategy.ASTAR + ":" + heuristicAlgorithm.toString(),searchStatsTreeAstarTiles.toString()));
 		}
 
-		{
+		{ 
 			System.err.println("Starting Tree AStar Manhattan");
 			SearchHeuristic heuristicAlgorithm = new ManhattanTilesHeuristic();
 			SearchStatistics searchStatsTreeAstarManhattan = nPuzzleSearchAlgorithm.solveTreeSearch(nPuzzle, Strategy.ASTAR,
@@ -96,7 +110,7 @@ public class Main {
 				System.err.println("Error: expected distance: " + targetMoveCount + ", found: "
 						+ searchStatsTreeAstarManhattan.getDistanceFromRoot());
 			}
-			pspList.add(new ProblemSolutionPerformance("" + nPuzzle.getSize() + ":" + targetMoveCount,
+			pspList.add(new ProblemSolutionPerformance(nPuzzle.getSize() + ":" + targetMoveCount,
 					Strategy.ASTAR + ":" + heuristicAlgorithm.toString(),searchStatsTreeAstarManhattan.toString()));
 		}
 

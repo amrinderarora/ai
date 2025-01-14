@@ -4,7 +4,6 @@ import java.util.ArrayDeque;
 import java.util.Comparator;
 import java.util.Deque;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
 
@@ -24,9 +23,8 @@ public class NPuzzleSearchAlgorithm implements SearchAlgorithm {
 	 * 
 	 * Uses the strategy that is given - BFS, DFS or AStar.
 	 * 
-	 * In case of AStar, uses a priority queue for cost. 
-	 * Regarding the heuristic, please provide a good one, and please be consistent,
-	 * positive and optimistic.
+	 * In case of AStar, uses a priority queue for cost. Regarding the heuristic,
+	 * please provide a good one, and please be consistent, positive and optimistic.
 	 * 
 	 * @param nPuzzle
 	 * @throws Exception
@@ -44,9 +42,9 @@ public class NPuzzleSearchAlgorithm implements SearchAlgorithm {
 		if (strategy == Strategy.ASTAR) {
 			return solveTreeSearchAstar(searchState, heuristicAlgorithm);
 		} else if (strategy == Strategy.BFS) {
-			return solveTreeSearchBFS(searchState);
+			return solveTreeSearchBFS((NPuzzle) searchState);
 		} else if (strategy == Strategy.DFS) {
-			return solveTreeSearchDFS(searchState, maxSearchDepth);
+			return solveTreeSearchDFS((NPuzzle) searchState, maxSearchDepth);
 		} else {
 			throw new IllegalArgumentException("Strategy not supported: " + strategy);
 		}
@@ -62,115 +60,110 @@ public class NPuzzleSearchAlgorithm implements SearchAlgorithm {
 				// f = g + h, that is, f = backward cost + forward cost
 				double f1 = ss1.getDistanceFromRoot() + heuristicAlgorithm.evaluate(ss1);
 				double f2 = ss2.getDistanceFromRoot() + heuristicAlgorithm.evaluate(ss2);
-		        return Double.compare(f1, f2);
-		    }
+				return Double.compare(f1, f2);
+			}
 		};
 		PriorityQueue<SearchState> openSet = new PriorityQueue<>(searchStateComparator);
 		openSet.add(nPuzzle);
 		searchStats.incrementOpen();
 
 		searchWhile: while (!openSet.isEmpty()) {
-			NPuzzle bestNode = (NPuzzle) openSet.poll(); // The lost f value
+			NPuzzle bestNode = (NPuzzle) openSet.poll(); // The lowest f value
 
-			Map<SearchState, Double> successors = bestNode.generateSuccessors();
-			for (SearchState nextNode : successors.keySet()) {
-				if (!openSet.contains(nextNode)) {
-					openSet.offer(nextNode); // add to priority queue, let it take care of it.
+			NPuzzle childNode = (NPuzzle) bestNode.getNextSuccessor();
+			while (childNode != null) {
+				if (!openSet.contains(childNode)) {
+					openSet.offer(childNode); // add to priority queue, let it take care of it.
 					searchStats.incrementOpen();
 					searchStats.setCurrentOpen(openSet.size());
-					if (nextNode.isGoalState()) {
-						double distanceToRoot = ((NPuzzle) nextNode).getDistanceFromRoot();
+					if (childNode.isGoalState()) {
+						double distanceToRoot = childNode.getDistanceFromRoot();
 						searchStats.setFound(true);
 						searchStats.setDistanceFromRoot(distanceToRoot);
 						break searchWhile;
 					}
 				}
+				childNode = (NPuzzle) bestNode.getNextSuccessor();
 			}
 		}
 		searchStats.stopTimer();
 		return searchStats;
 	}
 
-	private SearchStatistics solveTreeSearchBFS(SearchState searchState)
-			throws Exception {
-		NPuzzle nPuzzle = (NPuzzle) searchState;
+	private SearchStatistics solveTreeSearchBFS(NPuzzle nPuzzle) throws Exception {
 		SearchStatistics searchStats = new SearchStatistics();
 
 		Deque<SearchState> openSet = new ArrayDeque<>();
-		openSet.addLast(nPuzzle);
+		openSet.push(nPuzzle);
 		searchStats.incrementOpen();
+		int loopCounter = 0;
 
 		searchWhile: while (!openSet.isEmpty()) {
 			NPuzzle bestNode = (NPuzzle) openSet.removeFirst();
+			if (loopCounter++ % 10000 == 0) {
+				System.out.println("while(): current open: " + openSet.size() + ", bestNode distance: " + bestNode.getDistanceFromRoot());
+			}
 
-			Map<SearchState, Double> successors = bestNode.generateSuccessors();
-			for (SearchState nextNode : successors.keySet()) {
-				if (!openSet.contains(nextNode)) {
-					openSet.addLast(nextNode); // deque.addLast or deque.add
+
+			NPuzzle childNode = (NPuzzle) bestNode.getNextSuccessor();
+			while (childNode != null) {
+				if (!openSet.contains(childNode)) {
+					openSet.addLast(childNode); // deque.addLast or deque.add
 					searchStats.incrementOpen();
 					searchStats.setCurrentOpen(openSet.size());
-					if (nextNode.isGoalState()) {
-						double distanceToRoot = ((NPuzzle) nextNode).getDistanceFromRoot();
+
+					if (childNode.isGoalState()) {
+						double distanceToRoot = ((NPuzzle) childNode).getDistanceFromRoot();
 						searchStats.setFound(true);
 						searchStats.setDistanceFromRoot(distanceToRoot);
 						break searchWhile;
 					}
 				}
+				childNode = (NPuzzle) bestNode.getNextSuccessor();
 			}
 		}
 		searchStats.stopTimer();
 		return searchStats;
 	}
 
-	private SearchStatistics solveTreeSearchDFS(SearchState searchState,
-			double maxSearchDepth) throws Exception {
+	private SearchStatistics solveTreeSearchDFS(NPuzzle nPuzzle, double maxSearchDepth) throws Exception {
 		SearchStatistics searchStats = new SearchStatistics();
-
-		NPuzzle nPuzzle = (NPuzzle) searchState;
-		nPuzzle.generateSuccessors();
-		nPuzzle.setCurrSucessorIndex(0);
 
 		Deque<SearchState> openSet = new ArrayDeque<>();
 		openSet.push(nPuzzle);
 		searchStats.incrementOpen();
 
-		// The element at the top of the stack is what we are exploring
-		// Every element already has its successors generated and current = 0 before
-		// being pushed to the stack
 		// The element once popped can surely come in again because we don't know what
 		// is closed
-		// Same state matrix should not be on the stack, as we check before pushing
+		// Same state should not be on the stack, as we check before pushing
 		searchWhileLoopLabel: while (!openSet.isEmpty()) {
 			NPuzzle bestNode = (NPuzzle) openSet.getFirst(); // Stack.top or deque.getFirst
-//            System.out.println("Currently exploring: ");
-//            System.out.println(bestNode.getPrintVersion());
-//            Thread.sleep(1000);
-			if ((bestNode.getCurrSucessorIndex() < bestNode.getSuccessors().size())
-					&& (bestNode.getDistanceFromRoot() <= maxSearchDepth)) {
-				NPuzzle childNode = (NPuzzle) bestNode.getSuccessors().get(bestNode.getCurrSucessorIndex());
-				if (childNode.isGoalState()) {
-					double distanceFromRoot = childNode.getDistanceFromRoot();
-					searchStats.setFound(true);
-					searchStats.setDistanceFromRoot(distanceFromRoot);
-					break searchWhileLoopLabel;
-				}
-
-				// If the open set contains the child node, then we simply skip it and continue
-				// the exploration of the current node
-				// If the open set does not contain child node, then we add it, and start its
-				// exploration
-				if (openSet.contains(childNode)) {
-					bestNode.setCurrSucessorIndex(bestNode.getCurrSucessorIndex() + 1);
-				} else {
-					childNode.generateSuccessors();
-					openSet.push(childNode); // Stack.push or deque.addFirst
-					searchStats.setCurrentDistance(childNode.getDistanceFromRoot());
-					searchStats.setCurrentOpen(openSet.size());
-					bestNode.setCurrSucessorIndex(bestNode.getCurrSucessorIndex() + 1);
-				}
-
-			} else {
+//            System.out.println("Currently exploring: " + bestNode.getPrintVersion() + 
+//				", curr distance: " + bestNode.getDistanceFromRoot() + ", openSet.size: " + openSet.size());
+			if (bestNode.getDistanceFromRoot() > maxSearchDepth) {
+				openSet.pop();
+				continue searchWhileLoopLabel;
+			}
+			NPuzzle childNode = (NPuzzle) bestNode.getNextSuccessor();
+			if (childNode == null) {
 				openSet.pop(); // Stack.pop or deque.removeFirst
+				continue searchWhileLoopLabel;
+			}
+
+			if (childNode.isGoalState()) {
+				double distanceFromRoot = childNode.getDistanceFromRoot();
+				searchStats.setFound(true);
+				searchStats.setDistanceFromRoot(distanceFromRoot);
+				break searchWhileLoopLabel;
+			}
+
+			// If the open set contains the child node, then we simply skip it and continue
+			// the exploration of the current node
+			// If the open set does not contain child node, then we add it
+			if (!openSet.contains(childNode)) {
+				openSet.push(childNode); // Stack.push or deque.addFirst
+				searchStats.setCurrentDistance(childNode.getDistanceFromRoot());
+				searchStats.setCurrentOpen(openSet.size());
 			}
 		}
 		searchStats.stopTimer();
@@ -216,19 +209,21 @@ public class NPuzzleSearchAlgorithm implements SearchAlgorithm {
 			} else {
 				throw new IllegalArgumentException("Strategy not supported: " + strategy);
 			}
-			Map<SearchState, Double> successors = bestNode.generateSuccessors();
-			for (SearchState nextNode : successors.keySet()) {
-				if (!closedSet.contains(nextNode) && !openSet.contains(nextNode)) {
-					openSet.addLast((NPuzzle) nextNode);
+			
+			NPuzzle childNode = (NPuzzle) bestNode.getNextSuccessor();
+			while (childNode != null) {
+				if (!closedSet.contains(childNode) && !openSet.contains(childNode)) {
+					openSet.addLast(childNode);
 					searchStats.incrementOpen();
 					searchStats.setCurrentOpen(openSet.size());
-					if (nextNode.isGoalState()) {
-						double distanceFromRoot = ((NPuzzle) nextNode).getDistanceFromRoot();
+					if (childNode.isGoalState()) {
+						double distanceFromRoot = childNode.getDistanceFromRoot();
 						searchStats.setFound(true);
 						searchStats.setDistanceFromRoot(distanceFromRoot);
 						break searchWhile;
 					}
 				}
+				childNode = (NPuzzle) bestNode.getNextSuccessor();
 			}
 			// exploration of best node is finished
 			searchStats.incrementClosed();

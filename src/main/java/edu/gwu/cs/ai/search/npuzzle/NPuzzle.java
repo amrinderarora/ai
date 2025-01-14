@@ -2,9 +2,7 @@ package edu.gwu.cs.ai.search.npuzzle;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import edu.gwu.cs.ai.search.SearchState;
 
@@ -18,6 +16,7 @@ public class NPuzzle implements Cloneable, SearchState {
     private static final String NEW_LINE = System.getProperty("line.separator");
     private int size = 4;
 	private static final int ZERO = 0;
+	private static final Double DOUBLE_ONE = Double.valueOf(1);
     private int[][] stateMatrix;
     private int blankRow;
     private int blankCol;
@@ -26,7 +25,7 @@ public class NPuzzle implements Cloneable, SearchState {
     // Level/Distance from root (root is at level/distance 0)
     private double distanceFromRoot = 0;
     private List<SearchState> successors;
-    private int currSucessorIndex;
+    private int currSuccessorIndex = 0;
     private Direction lastDirection;
 
 	@Override
@@ -43,9 +42,9 @@ public class NPuzzle implements Cloneable, SearchState {
         if (getClass() != obj.getClass())
             return false;
         NPuzzle other = (NPuzzle) obj;
-        if (!Arrays.deepEquals(stateMatrix, other.stateMatrix))
-            return false;
-        return true;
+        if (Arrays.deepEquals(stateMatrix, other.stateMatrix))
+            return true;
+        return false;
     }
 
     /** Creates an instance of n-puzzle. By default, it is solved. */
@@ -142,6 +141,8 @@ public class NPuzzle implements Cloneable, SearchState {
     @Override
     public NPuzzle clone() throws CloneNotSupportedException {
         NPuzzle np2 = (NPuzzle) super.clone();
+        np2.successors = new ArrayList<>();
+        np2.currSuccessorIndex = 0;
         np2.stateMatrix = new int[size][size];
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
@@ -187,12 +188,12 @@ public class NPuzzle implements Cloneable, SearchState {
 		this.distanceFromRoot = distFromRoot;
 	}
 
-	public int getCurrSucessorIndex() {
-		return currSucessorIndex;
+	public int getCurrSuccessorIndex() {
+		return currSuccessorIndex;
 	}
 
-	public void setCurrSucessorIndex(int currSucessorIndex) {
-		this.currSucessorIndex = currSucessorIndex;
+	public void setCurrSuccessorIndex(int currSucessorIndex) {
+		this.currSuccessorIndex = currSucessorIndex;
 	}
 
 	public List<SearchState> getSuccessors() {
@@ -221,20 +222,47 @@ public class NPuzzle implements Cloneable, SearchState {
         }
         return true;
     }
-
-    @Override
-    public Map<SearchState, Double> generateSuccessors() {
-    	this.successors = new ArrayList<>();
-    	this.setCurrSucessorIndex(0);
-        Map<SearchState, Double> successorsMap = new HashMap<>();
-        for (Direction dir : Direction.getAllDirections()) {
-            if (this.movePossible(dir)) {
-                NPuzzle nextState = this.moveBlank(dir);
-                nextState.setDistanceFromRoot(this.distanceFromRoot + 1.0d);
-                successorsMap.put(nextState, 1.0d);
-                this.successors.add(nextState);
-            }
-        }
-        return successorsMap;
+    
+    /**
+     * Returns the next successor, in the order UP, RIGHT, DOWN, LEFT.
+     * Returns null if nothing possible.
+     * 
+     * @return
+     */
+    public SearchState getNextSuccessor() {
+    	NPuzzle nextState = null;
+    	while (nextState == null && currSuccessorIndex < 4) {
+    		Direction dir = getMatchingDirection(currSuccessorIndex);
+    		if (this.movePossible(dir)) {
+    			nextState = this.moveBlank(dir);
+                nextState.setDistanceFromRoot(this.distanceFromRoot + DOUBLE_ONE);
+    			// System.out.println("Returning successor: " + this.getPrintVersion() + ", next:" + nextState.getPrintVersion());
+    		}
+			this.currSuccessorIndex++;
+    	}
+    	return nextState;
     }
+
+    /**
+     * 0 --> UP
+     * 1 --> RIGHT
+     * 2 --> DOWN
+     * 3 --> LEFT
+     * Illegal Argument
+     */
+    private Direction getMatchingDirection(int idx) {
+    	if (idx == 0) {
+    		return Direction.UP;
+    	}
+    	if (idx == 1) {
+    		return Direction.RIGHT;
+    	}
+    	if (idx == 2) {
+    		return Direction.DOWN;
+    	}
+    	if (idx == 3) {
+    		return Direction.LEFT;
+    	}
+    	throw new IllegalArgumentException("Index out of range: " + idx);
+	}
 }

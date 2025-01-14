@@ -84,16 +84,16 @@ public class SearchStatistics {
     }
 
     /**
-     * Returs the elapsed time in milli seconds. If the timer was stopped already, it uses that.
-     * If the timer was not stopped yet, it stops it now.
+     * Returns the elapsed time in milli seconds. If the timer was stopped already, it uses that.
+     * If the timer was not stopped yet, it returns the elapsed time so far, but does not stop the timer.
      * 
      * @return
      */
     public long getElapsedTimeMillis() {
-        if (finishTime == null) {
-            stopTimer();
+        if (finishTime != null) {
+            return finishTime - startTime;
         }
-        return finishTime - startTime;
+        return System.currentTimeMillis() - startTime;
     }
 
     public void stopTimer() {
