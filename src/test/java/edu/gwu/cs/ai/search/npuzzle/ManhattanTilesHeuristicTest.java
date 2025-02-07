@@ -20,6 +20,21 @@ public class ManhattanTilesHeuristicTest {
     }
 
     @Test
+    public void testBlankStartingSpotZero() {
+        Assert.assertEquals(heuristic.getManhattanDistance(4, 0, 0, 0), 0, EPSILON);
+    }
+
+    @Test
+    public void testBlankRandomSpotZero() {
+        Assert.assertEquals(heuristic.getManhattanDistance(4, 1, 2, 0), 0, EPSILON);
+    }
+
+    @Test
+    public void testBlankEndingSpotZero() {
+        Assert.assertEquals(heuristic.getManhattanDistance(4, 3, 3, 0), 0, EPSILON);
+    }
+
+    @Test
     public void testSameRowLess() {
         Assert.assertEquals(heuristic.getManhattanDistance(3, 0, 4, 3), 2, EPSILON);
     }
@@ -68,5 +83,17 @@ public class ManhattanTilesHeuristicTest {
         NPuzzle nPuzzle = new NPuzzle(stateArray);
         double h = heuristic.evaluate(nPuzzle);
         Assert.assertEquals(h, 16, EPSILON);
+    }
+    
+
+    // 2, 6, 4 --> 1 + 2 + 3 = 6
+    // 3, 0, 7 --> 3 + 0 + 3 = 6
+    // 8, 5, 1 --> 1 + 1 + 4 = 6
+    @Test
+    public void testSample2() {
+        int[] stateArray = { 2, 6, 4, 3, 0, 7, 8, 5, 1 };
+        NPuzzle nPuzzle = new NPuzzle(stateArray);
+        double h = heuristic.evaluate(nPuzzle);
+        Assert.assertEquals(h, 18, EPSILON);
     }
 }

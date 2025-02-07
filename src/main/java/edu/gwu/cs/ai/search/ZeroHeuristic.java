@@ -11,4 +11,9 @@ public class ZeroHeuristic implements SearchHeuristic {
     public boolean isOptimistic() {
         return true;
     }
+
+	@Override
+	public String getFriendlyName() {
+		return "Zero";
+	}
 }
