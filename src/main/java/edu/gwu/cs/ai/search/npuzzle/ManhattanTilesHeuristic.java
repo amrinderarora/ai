@@ -21,11 +21,12 @@ public class ManhattanTilesHeuristic implements SearchHeuristic {
     /**
      * Manhattan distance if the value is located at i-th row and j-th column.
      * How many places does it need to move.
+     * For Blank (0), we always return 0.
      */
     public int getManhattanDistance(int size, int i, int j, int value) {
-        // There is a special rule for the blank.  If it is 0, then think of it as k*k
+        // Special rule for the blank.
         if (value == 0) {
-            value = size * size;
+        	return 0;
         }
         // values are 1...k*k - 1
         // value should be in:
@@ -46,4 +47,9 @@ public class ManhattanTilesHeuristic implements SearchHeuristic {
     public boolean isOptimistic() {
         return true;
     }
+
+	@Override
+	public String getFriendlyName() {
+		return "Manhattan";
+	}
 }

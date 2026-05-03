@@ -24,8 +24,13 @@ public class TilesHeuristic implements SearchHeuristic {
 	 * Examples:
 	 * isTileMisplaced(n,0,0,1) should return false for all values of n.
 	 * isTileMisplaced(5,3,3,19) should return false.
+	 * The "Blank" tile is never considered to be misplaced.
 	 */
 	public boolean isTileMisplaced(int size, int i, int j, int value) {
+		// If blank, we return false
+		if (value == 0) {
+			return false;
+		}
 		int expectedVal = size * i + j + 1;
 		if (expectedVal == size * size) {
 			expectedVal = 0;
@@ -36,5 +41,10 @@ public class TilesHeuristic implements SearchHeuristic {
 	@Override
 	public boolean isOptimistic() {
 		return true;
+	}
+
+	@Override
+	public String getFriendlyName() {
+		return "Tiles";
 	}
 }

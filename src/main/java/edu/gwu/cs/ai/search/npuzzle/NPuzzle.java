@@ -13,10 +13,14 @@ import edu.gwu.cs.ai.search.SearchState;
  * @author amrinder
  */
 public class NPuzzle implements Cloneable, SearchState {
-    private static final String NEW_LINE = System.getProperty("line.separator");
-    private int size = 4;
+
+	// Constants
+	private static final String NEW_LINE = System.getProperty("line.separator");
 	private static final int ZERO = 0;
 	private static final Double DOUBLE_ONE = Double.valueOf(1);
+
+	// State related properties
+    private int size = 10;
     private int[][] stateMatrix;
     private int blankRow;
     private int blankCol;
@@ -143,6 +147,7 @@ public class NPuzzle implements Cloneable, SearchState {
         NPuzzle np2 = (NPuzzle) super.clone();
         np2.successors = new ArrayList<>();
         np2.currSuccessorIndex = 0;
+        np2.lastDirection = null;
         np2.stateMatrix = new int[size][size];
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
@@ -225,9 +230,12 @@ public class NPuzzle implements Cloneable, SearchState {
     
     /**
      * Returns the next successor, in the order UP, RIGHT, DOWN, LEFT.
-     * Returns null if nothing possible.
+     * Returns null if nothing more is possible.
+     * It maintains the current successor index. When it considers the move
+     * (whether or not that move is possible), the current successor index
+     * is incremented.
      * 
-     * @return
+     * @return The next successor
      */
     public SearchState getNextSuccessor() {
     	NPuzzle nextState = null;

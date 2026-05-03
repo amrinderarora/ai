@@ -5,5 +5,7 @@ public interface SearchHeuristic {
     double evaluate(SearchState searchState);
 
     boolean isOptimistic();
+    
+    String getFriendlyName();
 
 }
